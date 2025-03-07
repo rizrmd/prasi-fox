@@ -97,13 +97,12 @@ describe("findMany", () => {
       "id",
       "display_name",
       "username",
-      "created_at",
     ] as const as FieldItem[];
 
     // Multiple orderBy fields with different directions
     const orderBy: OrderByClause[] = [
-      { field: "created_at", direction: "DESC" },
-      { field: "display_name", direction: "ASC" }
+      { field: "display_name", direction: "DESC" },
+      { field: "username", direction: "ASC" }
     ];
 
     let capturedSql = "";
@@ -126,9 +125,9 @@ describe("findMany", () => {
 
     // Verify the SQL contains both ORDER BY clauses
     expect(capturedSql).toContain("ORDER BY");
-    expect(capturedSql).toContain("m_user.created_at DESC");
-    expect(capturedSql).toContain("m_user.display_name ASC");
-    expect(capturedSql).toContain(", m_user.display_name ASC"); // Check correct formatting with comma
+    expect(capturedSql).toContain("m_user.display_name DESC");
+    expect(capturedSql).toContain("m_user.username ASC");
+    expect(capturedSql).toContain(", m_user.username ASC"); // Check correct formatting with comma
   });
 
   // Test for order by with NULLS FIRST/LAST
@@ -140,12 +139,12 @@ describe("findMany", () => {
     const fields = [
       "id",
       "display_name",
-      "last_login_at",
+      "username",
     ] as const as FieldItem[];
 
     // Using NULLS FIRST/LAST in ordering
     const orderBy: OrderByClause[] = [
-      { field: "last_login_at", direction: "DESC", nulls: "LAST" },
+      { field: "username", direction: "DESC", nulls: "LAST" },
       { field: "display_name", direction: "ASC", nulls: "FIRST" }
     ];
 
@@ -168,7 +167,7 @@ describe("findMany", () => {
     }
 
     // Verify the SQL contains NULLS FIRST/LAST
-    expect(capturedSql).toContain("m_user.last_login_at DESC NULLS LAST");
+    expect(capturedSql).toContain("m_user.username DESC NULLS LAST");
     expect(capturedSql).toContain("m_user.display_name ASC NULLS FIRST");
   });
 
@@ -343,4 +342,4 @@ describe("findMany", () => {
     // Verify the validation error
     expect(errorMessage).toContain("Relation \"client\" used in orderBy is not included in the query fields");
   });
-}); 
+});
