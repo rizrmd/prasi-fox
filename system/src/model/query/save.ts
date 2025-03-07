@@ -1,6 +1,6 @@
 import { sql } from "bun";
 import type { ModelDefinition } from "../types";
-import type { WhereClause } from "./utils/types";
+import type { SingleWhereClause } from "./utils/types";
 
 interface SaveOptions {
   data: Record<string, any>;
@@ -26,7 +26,7 @@ export const save = async ({ data, model, debug }: SaveOptions) => {
   }
 
   // Check if record exists using primary key values
-  const whereConditions: WhereClause[] = pkColumns
+  const whereConditions: SingleWhereClause[] = pkColumns
     .filter((col) => data[col] !== undefined)
     .map((col) => ({
       field: col,

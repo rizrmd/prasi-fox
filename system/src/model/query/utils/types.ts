@@ -16,11 +16,21 @@ export interface RelationPath {
   relation: RelationDefinition;
 }
 
-export interface WhereClause {
+export interface SingleWhereClause {
   field: string;
   operator: "=" | "!=" | ">" | "<" | ">=" | "<=" | "LIKE" | "ILIKE" | "IN";
   value: any;
 }
+
+export interface AndWhereClause {
+  and: WhereClause[];
+}
+
+export interface OrWhereClause {
+  or: WhereClause[];
+}
+
+export type WhereClause = SingleWhereClause | AndWhereClause | OrWhereClause;
 
 export interface FindFirstOptions {
   where: WhereClause[];
@@ -33,6 +43,7 @@ export interface FindFirstOptions {
     select: string[];
     joins: string[];
     where: string;
+    params?: any[];
   }) => void;
   isTest?: boolean;
 }

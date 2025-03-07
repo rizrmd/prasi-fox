@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it } from "bun:test";
+import { describe, expect, it } from "bun:test";
+import type { WhereClause } from "../utils/types";
 import { user } from "shared/generated/models/user";
 import { findFirst } from "../find-first";
 import type { FieldItem } from "../utils/types";
@@ -86,5 +87,132 @@ describe("findFirst", () => {
     expect(capturedSql).toContain("m_user.email");
     expect(capturedSql).toContain("json_agg");
     expect(capturedSql).toContain("t_session");
+  });
+
+  // Test nested AND/OR conditions
+  it("should handle nested AND/OR conditions", async () => {
+    const where: WhereClause[] = [
+      {
+        or: [
+          { field: "email", operator: "=", value: "test1@example.com" },
+          {
+            and: [
+              { field: "username", operator: "LIKE", value: "test%" },
+              { field: "deleted_at", operator: "=", value: null },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const fields = [
+      "id",
+      "email",
+      "username",
+      "deleted_at",
+    ] as const as FieldItem[];
+
+    let capturedSql = "";
+    let capturedParams: any[] = [];
+
+    try {
+      await findFirst({
+        where,
+        fields,
+        model: user,
+        debug: ({ sql, params }) => {
+          capturedSql = sql;
+          capturedParams = params || [];
+        },
+      });
+    } catch (error: any) {
+      // Expected to fail due to DB connection issues in test environment
+      console.log("Expected error:", error.message);
+    }
+
+    console.log("Actual SQL:", JSON.stringify(capturedSql));
+
+    // Verify individual parts of the SQL query
+    expect(capturedSql).toContain("SELECT m_user.id");
+    expect(capturedSql).toContain("m_user.email");
+    expect(capturedSql).toContain("m_user.username");
+    expect(capturedSql).toContain("m_user.deleted_at");
+    expect(capturedSql).toContain("FROM m_user");
+    expect(capturedSql).toContain("m_user.email = $1");
+    expect(capturedSql).toContain("m_user.username LIKE $2");
+    expect(capturedSql).toContain("m_user.deleted_at = $3");
+
+    // Verify parameters are in correct order
+    expect(capturedParams).toEqual(["test1@example.com", "test%", null]);
+  });
+
+  // Test deeply nested AND/OR conditions
+  it("should handle deeply nested AND/OR conditions", async () => {
+    const where: WhereClause[] = [
+      {
+        and: [
+          { field: "email", operator: "!=", value: "admin@example.com" },
+          {
+            or: [
+              { field: "deleted_at", operator: "=", value: null },
+              {
+                and: [
+                  { field: "username", operator: "LIKE", value: "temp%" },
+                  { field: "created_date", operator: ">", value: "2024-01-01" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const fields = [
+      "id",
+      "email",
+      "username",
+      "deleted_at",
+      "created_date",
+    ] as const as FieldItem[];
+
+    let capturedSql = "";
+    let capturedParams: any[] = [];
+
+    try {
+      await findFirst({
+        where,
+        fields,
+        model: user,
+        debug: ({ sql, params }) => {
+          capturedSql = sql;
+          capturedParams = params || [];
+        },
+      });
+    } catch (error: any) {
+      // Expected to fail due to DB connection issues in test environment
+      console.log("Expected error:", error.message);
+    }
+
+    console.log("Actual SQL:", JSON.stringify(capturedSql));
+
+    // Verify individual parts of the SQL query
+    expect(capturedSql).toContain("SELECT m_user.id");
+    expect(capturedSql).toContain("m_user.email");
+    expect(capturedSql).toContain("m_user.username");
+    expect(capturedSql).toContain("m_user.deleted_at");
+    expect(capturedSql).toContain("m_user.created_date");
+    expect(capturedSql).toContain("FROM m_user");
+    expect(capturedSql).toContain("m_user.email != $1");
+    expect(capturedSql).toContain("m_user.deleted_at = $2");
+    expect(capturedSql).toContain("m_user.username LIKE $3");
+    expect(capturedSql).toContain("m_user.created_date > $4");
+
+    // Verify parameters are in correct order
+    expect(capturedParams).toEqual([
+      "admin@example.com",
+      null,
+      "temp%",
+      "2024-01-01"
+    ]);
   });
 });

@@ -3,6 +3,7 @@ import type { FindFirstOptions } from "./utils/types";
 import { buildSelectQuery } from "./utils/sql-utils";
 import { processFields } from "./utils/query-utils";
 import { transformRecord } from "./utils/transform-utils";
+import { addDeletedAtFilter } from "./utils/deleted-at-utils";
 
 export const findFirst = async ({
   where,
@@ -14,15 +15,12 @@ export const findFirst = async ({
   // Process fields to separate columns and relations
   const { columnFields, relationPaths } = await processFields(fields, model);
 
-  // Add deleted_at filter if includeDeleted is false and the model has deleted_at column
-  const whereConditions = [...where];
-  if (!includeDeleted && model.columns.deleted_at) {
-    whereConditions.push({
-      field: "deleted_at",
-      operator: "=",
-      value: null,
-    });
-  }
+  // Handle deleted_at filtering
+  const whereConditions = addDeletedAtFilter(
+    [...where], 
+    includeDeleted, 
+    !!model.columns.deleted_at
+  );
 
   // Build the SELECT query using utility function
   const { queryStr, params } = buildSelectQuery(
@@ -44,6 +42,7 @@ export const findFirst = async ({
       select: [], // Empty array to satisfy type
       joins: [], // Empty array to satisfy type
       where: "", // Empty string to satisfy type
+      params, // Include params from buildSelectQuery
     });
   }
 
