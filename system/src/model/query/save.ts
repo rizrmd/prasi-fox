@@ -1,25 +1,103 @@
-import { sql } from "bun";
 import type { ModelDefinition } from "../types";
+import {
+  processBelongsToRelation,
+  processHasManyRelation,
+} from "./utils/relation-processors";
+import {
+  extractRelationData,
+  getPrimaryKeyColumns,
+} from "./utils/relation-utils";
+import {
+  buildInsertQuery,
+  buildUpdateQuery,
+  buildWhereClause,
+  executeQuery,
+  withTransaction,
+} from "./utils/save-utils";
 import type { SingleWhereClause } from "./utils/types";
 
-interface SaveOptions {
+export interface SaveOptions {
   data: Record<string, any>;
   model: ModelDefinition;
-  debug?: (params: {
-    arg: any;
-    sql: string;
-  }) => void;
+  debug?: (params: { arg: any; sql: string }) => void;
+  // For internal use during transactions
+  client?: any;
 }
 
-export const save = async ({ data, model, debug }: SaveOptions) => {
-  const columns = Object.keys(data).filter(
-    (key) => Object.keys(model.columns).includes(key)
+// Main entry point - with transaction support
+export const save = async (options: SaveOptions) => {
+  try {
+    // Use withTransaction utility function instead of manual transaction management
+    return await withTransaction({
+      operation: async (tx) => {
+        return saveWithinTransaction({
+          ...options,
+          client: tx,
+        });
+      },
+      debug: options.debug,
+    });
+  } catch (error) {
+    console.error("Error during save operation:", error);
+    throw error;
+  }
+};
+
+// Core save function (within transaction)
+const saveWithinTransaction = async ({
+  data,
+  model,
+  debug,
+  client,
+}: SaveOptions) => {
+  // Clone data to avoid modifying the original
+  const dataToSave = { ...data };
+
+  // Extract and remove relation data
+  const relationData = extractRelationData(dataToSave, model);
+
+  // Save the main record
+  const savedRecord = await saveRecord({
+    data: dataToSave,
+    model,
+    debug,
+    client,
+  });
+
+  // Process relations (if any)
+  if (Object.keys(relationData).length > 0) {
+    const recordWithRelations = await processRelations({
+      record: savedRecord,
+      relationData,
+      model,
+      debug,
+      client,
+    });
+
+    return recordWithRelations;
+  }
+
+  return savedRecord;
+};
+
+// Save a single record (no relations)
+const saveRecord = async ({
+  data,
+  model,
+  debug,
+  client,
+}: SaveOptions): Promise<Record<string, any>> => {
+  // Check if model and model.columns exist
+  if (!model || !model.columns) {
+    throw new Error(`Invalid model or model.columns is undefined`);
+  }
+  
+  const columns = Object.keys(data).filter((key) =>
+    Object.keys(model.columns).includes(key)
   );
 
-  // Get primary key columns
-  const pkColumns = Object.entries(model.columns)
-    .filter(([_, col]: [string, any]) => col.primary)
-    .map(([colName]) => colName);
+  // Get primary key columns using utility function
+  const pkColumns = getPrimaryKeyColumns(model);
 
   if (pkColumns.length === 0) {
     throw new Error(`Model ${model.table} has no primary key columns`);
@@ -36,35 +114,11 @@ export const save = async ({ data, model, debug }: SaveOptions) => {
 
   // If no primary key values provided, do insert
   if (whereConditions.length === 0) {
-    const columnList = columns.join(", ");
-    const valuePlaceholders = columns.map((_, i) => `$${i + 1}`).join(", ");
-
-    const insertQuery = `
-      INSERT INTO ${model.table} (${columnList})
-      VALUES (${valuePlaceholders})
-      RETURNING *
-    `;
-
-    const values = columns.map((col) => data[col]);
-
-    if (debug) {
-      debug({
-        arg: {
-          data,
-          model: model.table,
-        },
-        sql: insertQuery,
-      });
-    }
-
-    const result = await sql.unsafe(insertQuery, values);
-    return result[0];
+    return insertRecord({ data, columns, model, debug, client });
   }
 
-  // Check if record exists
-  const whereClause = whereConditions
-    .map((cond, i) => `${cond.field} = $${i + 1}`)
-    .join(" AND ");
+  // Build where clause using utility function
+  const { whereClause, whereValues } = buildWhereClause(whereConditions);
 
   const checkQuery = `
     SELECT EXISTS (
@@ -73,48 +127,78 @@ export const save = async ({ data, model, debug }: SaveOptions) => {
     )
   `;
 
-  const whereValues = whereConditions.map((cond) => cond.value);
+  // Execute query using utility function
+  const result = await executeQuery({
+    query: checkQuery,
+    values: whereValues,
+    debug,
+    client,
+    debugInfo: { where: whereConditions, model: model.table },
+  });
 
-  if (debug) {
-    debug({
-      arg: {
-        where: whereConditions,
-        model: model.table,
-      },
-      sql: checkQuery,
-    });
-  }
-
-  const exists = (await sql.unsafe(checkQuery, whereValues))[0]?.exists;
+  const exists = result[0]?.exists;
 
   if (!exists) {
     // Do insert if record doesn't exist
-    const columnList = columns.join(", ");
-    const valuePlaceholders = columns.map((_, i) => `$${i + 1}`).join(", ");
-
-    const insertQuery = `
-      INSERT INTO ${model.table} (${columnList})
-      VALUES (${valuePlaceholders})
-      RETURNING *
-    `;
-
-    const values = columns.map((col) => data[col]);
-
-    if (debug) {
-      debug({
-        arg: {
-          data,
-          model: model.table,
-        },
-        sql: insertQuery,
-      });
-    }
-
-    const result = await sql.unsafe(insertQuery, values);
-    return result[0];
+    return insertRecord({ data, columns, model, debug, client });
+  } else {
+    // Do update if record exists
+    return updateRecord({
+      data,
+      columns,
+      model,
+      whereConditions,
+      whereClause,
+      whereValues,
+      pkColumns,
+      debug,
+      client,
+    });
   }
+};
 
-  // Do update if record exists
+// Insert a new record
+const insertRecord = async ({
+  data,
+  columns,
+  model,
+  debug,
+  client,
+}: SaveOptions & { columns: string[] }): Promise<Record<string, any>> => {
+  // Use utility function to build insert query
+  const { query: insertQuery } = buildInsertQuery(model.table, columns);
+  const values = columns.map((col) => data[col]);
+
+  // Execute query using utility function
+  const result = await executeQuery({
+    query: insertQuery,
+    values,
+    debug,
+    client,
+    debugInfo: { data, model: model.table },
+  });
+
+  return result[0];
+};
+
+// Update an existing record
+const updateRecord = async ({
+  data,
+  columns,
+  model,
+  whereConditions,
+  whereClause,
+  whereValues,
+  pkColumns,
+  debug,
+  client,
+}: SaveOptions & {
+  columns: string[];
+  whereConditions: SingleWhereClause[];
+  whereClause: string;
+  whereValues: any[];
+  pkColumns: string[];
+}): Promise<Record<string, any>> => {
   const updateColumns = columns.filter(
     (col) => !pkColumns.includes(col) && data[col] !== undefined
   );
@@ -126,44 +210,87 @@ export const save = async ({ data, model, debug }: SaveOptions) => {
       WHERE ${whereClause}
     `;
 
-    if (debug) {
-      debug({
-        arg: {
-          where: whereConditions,
-          model: model.table,
-        },
-        sql: selectQuery,
-      });
-    }
+    // Execute query using utility function
+    const result = await executeQuery({
+      query: selectQuery,
+      values: whereValues,
+      debug,
+      client,
+      debugInfo: { where: whereConditions, model: model.table },
+    });
 
-    const result = await sql.unsafe(selectQuery, whereValues);
     return result[0];
   }
 
-  const updateClause = updateColumns
-    .map((col, i) => `${col} = $${whereValues.length + i + 1}`)
-    .join(", ");
+  // Use utility function to build update query
+  const { query: updateQuery } = buildUpdateQuery({
+    table: model.table,
+    updateColumns,
+    whereClause,
+    whereValuesLength: whereValues.length,
+  });
 
-  const updateQuery = `
-    UPDATE ${model.table}
-    SET ${updateClause}
-    WHERE ${whereClause}
-    RETURNING *
-  `;
+  const updateValues = [
+    ...whereValues,
+    ...updateColumns.map((col) => data[col]),
+  ];
 
-  const updateValues = [...whereValues, ...updateColumns.map((col) => data[col])];
+  // Execute query using utility function
+  const result = await executeQuery({
+    query: updateQuery,
+    values: updateValues,
+    debug,
+    client,
+    debugInfo: { data, where: whereConditions, model: model.table },
+  });
 
-  if (debug) {
-    debug({
-      arg: {
-        data,
-        where: whereConditions,
-        model: model.table,
-      },
-      sql: updateQuery,
-    });
+  return result[0];
+};
+
+// Process relations
+const processRelations = async ({
+  record,
+  relationData,
+  model,
+  debug,
+  client,
+}: {
+  record: Record<string, any>;
+  relationData: Record<string, any>;
+  model: ModelDefinition;
+  debug?: SaveOptions["debug"];
+  client?: any;
+}): Promise<Record<string, any>> => {
+  const result = { ...record };
+
+  for (const [relationName, relationValue] of Object.entries(relationData)) {
+    const relationConfig = model.relations?.[relationName];
+
+    if (!relationConfig) continue;
+
+    if (relationConfig.type === "belongs_to") {
+      const belongsToResult = await processBelongsToRelation({
+        record: result,
+        relationName,
+        relationValue,
+        relationConfig,
+        debug,
+        client,
+        saveWithinTransaction,
+      });
+
+      Object.assign(result, belongsToResult);
+    } else if (relationConfig.type === "has_many") {
+      result[relationName] = await processHasManyRelation({
+        record: result,
+        relationValue,
+        relationConfig,
+        debug,
+        client,
+        saveWithinTransaction,
+      });
+    }
   }
 
-  const result = await sql.unsafe(updateQuery, updateValues);
-  return result[0];
+  return result;
 };
