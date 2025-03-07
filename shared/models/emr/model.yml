@@ -1,0 +1,56 @@
+table: emr
+columns:
+  id:
+    type: uuid
+    primary: true
+  emr_number: text
+  patient_name: text
+  doctor_name: text
+  encounter_type: text
+  appointment_date: datetime
+  careplan_description: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  id_encounter: uuid
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
+  doctor:
+    type: belongs_to
+    from: id_doctor
+    to: staff.id
+  emr_observation:
+    type: has_many
+    from: id
+    to: emr_observation.id_emr
+  emr_anamnesis:
+    type: has_many
+    from: id
+    to: emr_anamnesis.id_emr
+  prescriptions:
+    type: has_many
+    from: id
+    to: prescriptions.id_emr
+  emr_service_request:
+    type: has_many
+    from: id
+    to: emr_service_request.id_emr
+  emr_diagnosis_treatment:
+    type: has_many
+    from: id
+    to: emr_diagnosis_treatment.id_emr
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_emr_patient

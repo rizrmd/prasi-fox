@@ -1,0 +1,36 @@
+table: m_medicine
+columns:
+  id:
+    type: uuid
+    primary: true
+  code: text
+  name: text
+  package: text
+  stock: text
+  expired_date: datetime
+  manufacturer: text
+  is_fast_moving: boolean
+  dosage: text
+  price: text
+  ingredients: text
+  created_date:
+    type: datetime
+    default: now()
+  updated_date: datetime
+  created_by: uuid
+  updated_by: uuid
+  deleted_at: datetime
+  category: text
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  prescriptions:
+    type: has_many
+    from: id
+    to: prescriptions.id_medicine
+  emr_diagnosis_treatment:
+    type: has_many
+    from: id
+    to: emr_diagnosis_treatment.id_medicine

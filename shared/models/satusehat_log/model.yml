@@ -1,0 +1,26 @@
+table: t_satusehat_log
+columns:
+  id:
+    type: uuid
+    primary: true
+  endpoint: text
+  request_body: json
+  response_body: json
+  status_code: number
+  status: text
+  error_message: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  resource_data:
+    type: json
+    default: "{}"
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id

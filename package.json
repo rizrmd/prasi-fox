@@ -1,0 +1,22 @@
+{
+  "name": "prasi-fox",
+  "module": "index.ts",
+  "type": "module",
+  "workspaces": [
+    "system",
+    "shared"
+  ],
+  "scripts": {
+    "model": "bun system/src/cli/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "js-yaml": "^4.1.0"
+  }
+}

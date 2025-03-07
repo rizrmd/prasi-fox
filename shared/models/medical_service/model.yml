@@ -1,0 +1,25 @@
+table: m_medical_service
+columns:
+  id:
+    type: uuid
+    primary: true
+  name: text
+  code: text
+  description: text
+  price: text
+  created_by: uuid
+  created_date: datetime
+  updated_by: uuid
+  updated_date: datetime
+  deleted_at: datetime
+  id_treatment: uuid
+  id_medicine: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_medical_service

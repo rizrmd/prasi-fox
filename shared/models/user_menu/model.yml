@@ -1,0 +1,23 @@
+table: m_user_menu
+columns:
+  id:
+    type: uuid
+    primary: true
+  created_date: datetime
+  updated_date: datetime
+  deleted_at: datetime
+  created_by: uuid
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  menu:
+    type: belongs_to
+    from: id_menu
+    to: menu.id
+  user:
+    type: belongs_to
+    from: id_user
+    to: user.id

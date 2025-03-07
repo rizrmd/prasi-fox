@@ -1,0 +1,53 @@
+table: t_patient_queue
+columns:
+  id:
+    type: uuid
+    primary: true
+  patient_name: text
+  queue_number: text
+  registered_date: datetime
+  patient_phone: text
+  channel_name: text
+  queue_status: text
+  reschedule_date: datetime
+  referral_letter_number: text
+  referring_physician: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  is_referred: boolean
+  reservation_doctor: text
+  reservation_poli: text
+  reservation_date: datetime
+  contact_name: text
+  contact_phone: text
+  has_bpjs:
+    type: boolean
+    default: "true"
+  bpjs_number: text
+  referring_faskes: text
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
+  doctor:
+    type: belongs_to
+    from: id_doctor
+    to: staff.id
+  poli:
+    type: belongs_to
+    from: id_poli
+    to: poli.id
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_patient_queue

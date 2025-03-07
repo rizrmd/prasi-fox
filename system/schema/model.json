@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Model Schema",
+  "description": "Schema for user model definition",
+  "type": "object",
+  "required": ["table", "columns"],
+  "properties": {
+    "table": {
+      "type": "string",
+      "description": "The name of the database table"
+    },
+    "columns": {
+      "type": "object",
+      "description": "Column definitions for the table",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "number",
+              "text",
+              "uuid",
+              "boolean",
+              "enum",
+              "datetime",
+              "json"
+            ],
+            "description": "Simple column type definition"
+          },
+          {
+            "type": "object",
+            "description": "Detailed column definition",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "number",
+                  "text",
+                  "uuid",
+                  "boolean",
+                  "enum",
+                  "datetime"
+                ],
+                "description": "Data type of the column"
+              },
+              "primary": {
+                "type": "boolean",
+                "description": "Whether this is a primary key"
+              },
+              "default": {
+                "type": ["string", "null", "number", "boolean"],
+                "description": "Default value or expression"
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Possible values for enum type"
+              }
+            },
+            "required": ["type"]
+          }
+        ]
+      }
+    },
+    "relations": {
+      "type": "object",
+      "description": "Relation definitions for the table",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "from", "to"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["has_many", "belongs_to"],
+            "description": "Type of relation"
+          },
+          "from": {
+            "type": "string",
+            "description": "Source column or field"
+          },
+          "to": {
+            "type": "string",
+            "description": "Target table.column"
+          }
+        },
+        "description": "Object describing relation type and mapping"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+table: t_bpjs_log
+columns:
+  id:
+    type: uuid
+    primary: true
+  patient_name: text
+  bpjs_number: text
+  transaction_date: datetime
+  claim_amount: text
+  claim_status: text
+  notes: text
+  created_by: uuid
+  created_date: datetime
+  deleted_at: datetime
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  invoice:
+    type: belongs_to
+    from: id_invoice
+    to: invoice.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id

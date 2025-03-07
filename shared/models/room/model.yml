@@ -1,0 +1,29 @@
+table: m_room
+columns:
+  id:
+    type: uuid
+    primary: true
+  name: text
+  status: text
+  service_class: text
+  longitude: text
+  latitude: text
+  description: text
+  created_date: datetime
+  created_by: uuid
+  updated_date: datetime
+  updated_by: uuid
+  deleted_at: datetime
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_room
+  patient_room:
+    type: has_many
+    from: id
+    to: patient_room.id_room

@@ -1,0 +1,29 @@
+table: t_invoice_line
+columns:
+  id:
+    type: uuid
+    primary: true
+  description: text
+  quantity: text
+  unit_price: text
+  total_price: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  treatment_name: text
+  id_treatment: uuid
+  medicine_name: text
+  id_medicine: uuid
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  invoice:
+    type: belongs_to
+    from: id_invoice
+    to: invoice.id

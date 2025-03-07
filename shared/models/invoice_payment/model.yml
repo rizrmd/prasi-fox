@@ -1,0 +1,32 @@
+table: t_invoice_payment
+columns:
+  id:
+    type: uuid
+    primary: true
+  patient_name: text
+  invoice_number: text
+  payment_date: datetime
+  payment_method: text
+  amount_paid: text
+  reference_number: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  status: text
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  invoice:
+    type: belongs_to
+    from: id_invoice
+    to: invoice.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id

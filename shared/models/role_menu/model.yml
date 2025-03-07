@@ -1,0 +1,24 @@
+table: m_role_menu
+columns:
+  id:
+    type: uuid
+    primary: true
+  url_pattern: text
+  created_date: datetime
+  updated_date: datetime
+  deleted_at: datetime
+  created_by: uuid
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  staff_role:
+    type: belongs_to
+    from: id_staff_role
+    to: staff_role.id
+  menu:
+    type: belongs_to
+    from: id_menu
+    to: menu.id

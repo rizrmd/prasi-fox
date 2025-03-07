@@ -1,0 +1,36 @@
+table: m_staff_role
+columns:
+  id:
+    type: uuid
+    primary: true
+  name: text
+  created_date: datetime
+  created_by: uuid
+  updated_date: datetime
+  updated_by: uuid
+  deleted_at: datetime
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  role_menu:
+    type: has_many
+    from: id
+    to: role_menu.id_staff_role
+  user:
+    type: has_many
+    from: id
+    to: user.id_staff_role
+  schedule_doctor:
+    type: has_many
+    from: id
+    to: schedule_doctor.id_staff_role
+  staff_log:
+    type: has_many
+    from: id
+    to: staff_log.id_staff_role
+  staff:
+    type: has_many
+    from: id
+    to: staff.id_staff_role

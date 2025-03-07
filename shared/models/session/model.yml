@@ -1,0 +1,25 @@
+table: t_session
+columns:
+  id:
+    type: uuid
+    primary: true
+  created_at: datetime
+  status:
+    type: text
+    default: active
+  expired_at: datetime
+  device_uuid: uuid
+  created_date:
+    type: datetime
+    default: now()
+  created_by: uuid
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+  deleted_at: datetime
+relations:
+  user:
+    type: belongs_to
+    from: id_user
+    to: user.id

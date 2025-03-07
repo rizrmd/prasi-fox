@@ -1,0 +1,30 @@
+table: t_staff_log
+columns:
+  id:
+    type: uuid
+    primary: true
+  staff_name: text
+  staff_role: text
+  activity_type: text
+  activity_description: text
+  date: datetime
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  staff_role:
+    type: belongs_to
+    from: id_staff_role
+    to: staff_role.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id

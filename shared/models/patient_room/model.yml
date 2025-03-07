@@ -1,0 +1,38 @@
+table: t_patient_room
+columns:
+  id:
+    type: uuid
+    primary: true
+  patient_name: text
+  contact_name: text
+  phone_number: text
+  admission_date: datetime
+  referral_letter_number: text
+  referring_physician: text
+  room_name: text
+  doctor_name: text
+  created_by: uuid
+  created_date: datetime
+  deleted_at: datetime
+  admission_reason: text
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
+  doctor:
+    type: belongs_to
+    from: id_doctor
+    to: staff.id
+  room:
+    type: belongs_to
+    from: id_room
+    to: room.id

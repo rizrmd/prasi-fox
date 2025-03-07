@@ -1,0 +1,38 @@
+table: emr_diagnosis_treatment
+columns:
+  id:
+    type: uuid
+    primary: true
+  diagnosis: text
+  treatment: text
+  medicine: text
+  medicine_rules: text
+  notes: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  diagnosis:
+    type: belongs_to
+    from: id_diagnosis
+    to: diagnosis.id
+  emr:
+    type: belongs_to
+    from: id_emr
+    to: emr.id
+  medicine:
+    type: belongs_to
+    from: id_medicine
+    to: medicine.id
+  treatment:
+    type: belongs_to
+    from: id_treatment
+    to: treatment.id

@@ -1,0 +1,34 @@
+table: m_poli
+columns:
+  id:
+    type: uuid
+    primary: true
+  name: text
+  status: text
+  created_date: datetime
+  created_by: uuid
+  updated_date: datetime
+  updated_by: uuid
+  deleted_at: datetime
+  poli_code: text
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_poli
+  schedule_poli:
+    type: has_many
+    from: id
+    to: schedule_poli.id_poli
+  schedule_doctor:
+    type: has_many
+    from: id
+    to: schedule_doctor.id_poli
+  patient_queue:
+    type: has_many
+    from: id
+    to: patient_queue.id_poli

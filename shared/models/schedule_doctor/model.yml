@@ -1,0 +1,31 @@
+table: m_schedule_doctor
+columns:
+  id:
+    type: uuid
+    primary: true
+  doctor_name: text
+  created_date: datetime
+  created_by: uuid
+  updated_date: datetime
+  updated_by: uuid
+  deleted_at: datetime
+  day: text
+  start_time: datetime
+  end_time: datetime
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  staff_role:
+    type: belongs_to
+    from: id_staff_role
+    to: staff_role.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id
+  poli:
+    type: belongs_to
+    from: id_poli
+    to: poli.id

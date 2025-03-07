@@ -1,0 +1,22 @@
+table: m_treatment
+columns:
+  id:
+    type: uuid
+    primary: true
+  code: text
+  name: text
+  version: text
+  created_date: datetime
+  updated_date: datetime
+  created_by: uuid
+  updated_by: uuid
+  deleted_at: datetime
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  emr_diagnosis_treatment:
+    type: has_many
+    from: id
+    to: emr_diagnosis_treatment.id_treatment

@@ -1,0 +1,53 @@
+table: t_prescriptions
+columns:
+  id:
+    type: uuid
+    primary: true
+  patient_name: text
+  doctor_name: text
+  medicine_code: text
+  medicine_name: text
+  dosage: text
+  dosage_instructions: text
+  notes: text
+  created_date: datetime
+  created_by: uuid
+  deleted_at: datetime
+  quantity: text
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
+  doctor:
+    type: belongs_to
+    from: id_doctor
+    to: staff.id
+  emr:
+    type: belongs_to
+    from: id_emr
+    to: emr.id
+  medicine:
+    type: belongs_to
+    from: id_medicine
+    to: medicine.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id
+  prescriptions_queue:
+    type: has_many
+    from: id
+    to: prescriptions_queue.id_prescription
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_prescription

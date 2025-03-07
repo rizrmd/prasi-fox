@@ -1,0 +1,27 @@
+table: emr_anamnesis
+columns:
+  id:
+    type: uuid
+    primary: true
+  condition_patient: text
+  medical_history: text
+  familymember_history: text
+  allergy_intolerance: text
+  medication_statement: text
+  created_by: uuid
+  created_date: datetime
+  deleted_date: datetime
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
+  deleted_at: datetime
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  emr:
+    type: belongs_to
+    from: id_emr
+    to: emr.id

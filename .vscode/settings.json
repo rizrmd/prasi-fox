@@ -1,0 +1,17 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/CVS": true,
+    "node_modules": true
+  },
+  "hide-files.files": [
+    "node_modules"
+  ],
+  "yaml.schemas": {
+    "./system/schema/model.json": "**/model.yml"
+  }
+}

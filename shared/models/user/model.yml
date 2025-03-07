@@ -1,0 +1,35 @@
+table: m_user
+columns:
+  id:
+    type: uuid
+    primary: true
+  display_name: text
+  email: text
+  password: text
+  username: text
+  created_date: datetime
+  created_by: uuid
+  updated_date: datetime
+  updated_by: uuid
+  deleted_at: datetime
+relations:
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  staff_role:
+    type: belongs_to
+    from: id_staff_role
+    to: staff_role.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id
+  session:
+    type: has_many
+    from: id
+    to: session.id_user
+  user_menu:
+    type: has_many
+    from: id
+    to: user_menu.id_user
