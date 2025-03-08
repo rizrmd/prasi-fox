@@ -8,11 +8,11 @@ columns:
   satusehat_id: text
   deleted_at: datetime
   config: json
-  created_date:
+  created_at:
     type: datetime
     default: now()
   created_by: uuid
-  updated_date:
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

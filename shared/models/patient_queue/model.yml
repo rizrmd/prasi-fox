@@ -31,9 +31,6 @@ columns:
   referring_physician:
     type: text
     comment: petugas yg merujuk
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   deleted_at: datetime
   is_referred:
@@ -55,7 +52,10 @@ columns:
   referring_faskes:
     type: text
     comment: faskes perujuk
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

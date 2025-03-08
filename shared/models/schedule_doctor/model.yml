@@ -7,11 +7,7 @@ columns:
   doctor_name:
     type: text
     required: true
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
-  updated_date: datetime
   updated_by: uuid
   deleted_at: datetime
   day:
@@ -24,6 +20,12 @@ columns:
   end_time:
     type: datetime
     required: true
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   client:
     type: belongs_to

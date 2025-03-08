@@ -9,5 +9,4 @@ labels:
   error_message: [6, Error Message]
   created_date: [7, Created Date, required]
   resource_data: [8, Resource Data]
-  updated_date: [9, Updated Date]
-  client: [10, Client]
+  client: [9, Client]

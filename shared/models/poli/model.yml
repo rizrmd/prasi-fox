@@ -11,16 +11,18 @@ columns:
     type: text
     required: true
     comment: active/suspended/inactive
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
-  updated_date: datetime
   updated_by: uuid
   deleted_at: datetime
   poli_code:
     type: text
     comment: kode poli = A/B/C
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   client:
     type: belongs_to

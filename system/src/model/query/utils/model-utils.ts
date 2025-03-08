@@ -35,7 +35,7 @@ export async function validateRelationPath(
 
     if (!relation) {
       throw new Error(
-        `Relation ${segment} not found in model ${
+        `Relation ${segment} not found in table ${
           currentModel.table
         }. Available relations: ${Object.keys(currentModel.relations).join(
           ", "

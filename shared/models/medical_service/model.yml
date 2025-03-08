@@ -13,14 +13,16 @@ columns:
     type: text
     required: true
   created_by: uuid
-  created_date:
-    type: datetime
-    required: true
   updated_by: uuid
-  updated_date: datetime
   deleted_at: datetime
   id_treatment: uuid
   id_medicine: uuid
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   client:
     type: belongs_to

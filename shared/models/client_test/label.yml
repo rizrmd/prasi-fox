@@ -1,6 +1,0 @@
-title: Client test
-record_title: [name]
-labels:
-  name: [1, Name, required]
-  created_date: [2, Created Date]
-  updated_date: [3, Updated Date]

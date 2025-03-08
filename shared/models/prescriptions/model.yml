@@ -19,16 +19,16 @@ columns:
     type: text
     required: true
   notes: text
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   deleted_at: datetime
   quantity:
     type: text
     required: true
     comment: jumlah obat
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

@@ -16,11 +16,8 @@ columns:
   device_uuid:
     type: uuid
     required: true
-  created_date:
-    type: datetime
-    default: now()
   created_by: uuid
-  updated_date:
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

@@ -7,7 +7,9 @@
     "shared"
   ],
   "scripts": {
-    "model": "bun system/src/cli/index.ts"
+    "model": "bun system/src/cli/index.ts",
+    "start": "bun system/src/server/start.ts",
+    "dev": "bun --hot system/src/server/start.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

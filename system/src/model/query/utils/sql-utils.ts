@@ -133,7 +133,12 @@ export interface WhereClauseResult {
   params: any[];
 }
 
-import type { WhereClause, SingleWhereClause, AndWhereClause, OrWhereClause } from "./types";
+import type {
+  WhereClause,
+  SingleWhereClause,
+  AndWhereClause,
+  OrWhereClause,
+} from "./types";
 
 const buildCondition = (
   model: ModelBase,
@@ -181,6 +186,13 @@ const buildCondition = (
   // Only validate field existence if it's on the base model
   if (tableName === model.table && !model.columns[fieldName]) {
     throw new Error(`Column ${fieldName} not found in model ${model.table}`);
+  }
+
+  // Handle NULL values specially
+  if (clause.value === null) {
+    return `${tableName}.${fieldName} ${
+      operator === "!=" ? "IS NOT NULL" : "IS NULL"
+    }`;
   }
 
   params.push(clause.value);
@@ -264,8 +276,19 @@ export const buildSelectQuery = (
 ): SelectQueryResult => {
   // Build the SELECT query fields
   const selectFields = columnFields.map((field) => {
+    if (field === "*") {
+      // Special case for wildcard - select all columns
+      return `${model.table}.*`;
+    }
+
     if (!model.columns[field]) {
-      throw new Error(`Column ${field} not found in model ${model.table}`);
+      for (const [k, v] of Object.entries(model.relations)) {
+        if (v.type === "belongs_to" && v.from === field) {
+          return `${model.table}.${field}`;
+        }
+      }
+
+      throw new Error(`Column ${field} not found in table ${model.table}`);
     }
     return `${model.table}.${field}`;
   });

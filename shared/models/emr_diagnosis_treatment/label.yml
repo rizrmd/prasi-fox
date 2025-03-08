@@ -1,12 +1,11 @@
 title: Emr diagnosis treatment
 record_title: [diagnosis, treatment]
 labels:
-  diagnosis: [9, Diagnosis]
-  treatment: [12, Treatment]
-  medicine: [11, Medicine]
+  diagnosis: [8, Diagnosis]
+  treatment: [11, Treatment]
+  medicine: [10, Medicine]
   medicine_rules: [4, Medicine Rules]
   notes: [5, Notes]
   created_date: [6, Created Date, required]
-  updated_date: [7, Updated Date]
-  client: [8, Client]
-  emr: [10, Emr]
+  client: [7, Client]
+  emr: [9, Emr]

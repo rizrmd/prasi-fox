@@ -18,7 +18,18 @@ export interface RelationPath {
 
 export interface SingleWhereClause {
   field: string;
-  operator: "=" | "!=" | ">" | "<" | ">=" | "<=" | "LIKE" | "ILIKE" | "IN";
+  operator:
+    | "="
+    | "!="
+    | ">"
+    | "<"
+    | ">="
+    | "<="
+    | "LIKE"
+    | "ILIKE"
+    | "IN"
+    | "IS NULL"
+    | "IS NOT NULL";
   value: any;
 }
 

@@ -20,17 +20,18 @@ columns:
   dosage: text
   price: text
   ingredients: text
-  created_date:
-    type: datetime
-    required: true
-    default: now()
-  updated_date: datetime
   created_by: uuid
   updated_by: uuid
   deleted_at: datetime
   category:
     type: text
     comment: kategori obat
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   emr_diagnosis_treatment:
     type: has_many

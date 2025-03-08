@@ -31,16 +31,18 @@ columns:
   end_date:
     type: datetime
     comment: tanggal akhir berlaku
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
-  updated_date: datetime
   updated_by: uuid
   deleted_at: datetime
   status:
     type: text
     default: Available
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   emr:
     type: has_many

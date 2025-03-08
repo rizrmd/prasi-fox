@@ -15,16 +15,16 @@ columns:
   encounter_date:
     type: datetime
     required: true
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   deleted_at: datetime
   status:
     type: text
     required: true
     comment: planned/arrived/triaged/in-progress/onleave/finished/cancelled
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

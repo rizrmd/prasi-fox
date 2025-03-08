@@ -30,13 +30,15 @@ columns:
   relationship_type:
     type: text
     comment: family
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   updated_by: uuid
-  updated_date: datetime
   deleted_at: datetime
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   emr:
     type: has_many

@@ -14,14 +14,10 @@ columns:
   is_active: boolean
   sequence: number
   created_at: datetime
-  update_at: datetime
   deleted_at: datetime
   description: text
-  created_date:
-    type: datetime
-    default: now()
   created_by: uuid
-  updated_date:
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

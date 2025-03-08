@@ -3,6 +3,7 @@ import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import type { ColumnDefinition, ModelDefinition } from "system/model/types";
 import { parse } from "yaml";
+import { auditColumns } from "./model-utils";
 
 // Load and parse model.yml files
 async function loadModelFiles(
@@ -126,15 +127,6 @@ function generateUpdateSQL(
   Object.entries(modelDef.columns).forEach(([name, def]) => {
     columns.set(name, def);
   });
-
-  // Add audit columns if they don't exist
-  const auditColumns = {
-    created_date: { type: "datetime", default: "now()" },
-    created_by: "uuid",
-    updated_date: { type: "datetime", default: "now()" },
-    updated_by: "uuid",
-    deleted_at: "datetime",
-  };
 
   for (const [name, def] of Object.entries(auditColumns)) {
     if (!columns.has(name)) {

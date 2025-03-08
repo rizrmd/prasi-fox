@@ -5,13 +5,15 @@ columns:
     primary: true
     required: true
   name: text
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
-  updated_date: datetime
   updated_by: uuid
   deleted_at: datetime
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   role_menu:
     type: has_many

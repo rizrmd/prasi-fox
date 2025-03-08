@@ -11,13 +11,15 @@ columns:
     type: text
     required: true
   version: text
-  created_date:
-    type: datetime
-    required: true
-  updated_date: datetime
   created_by: uuid
   updated_by: uuid
   deleted_at: datetime
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
+    type: datetime
+    default: now()
 relations:
   emr_diagnosis_treatment:
     type: has_many

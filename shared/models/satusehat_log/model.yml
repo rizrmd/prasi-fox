@@ -19,16 +19,16 @@ columns:
     required: true
     comment: pending/success/failed
   error_message: text
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   deleted_at: datetime
   resource_data:
     type: json
     required: true
     default: "{}"
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

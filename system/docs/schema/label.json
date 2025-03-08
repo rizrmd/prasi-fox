@@ -20,7 +20,7 @@
       "additionalProperties": {
         "type": "array",
         "minItems": 2,
-        "maxItems": 2,
+        "maxItems": 3,
         "items": [
           {
             "type": "integer",
@@ -29,6 +29,10 @@
           {
             "type": "string",
             "description": "The display label for the field"
+          },
+          {
+            "type": "string",
+            "description": "properties for the field: required, unique"
           }
         ]
       }

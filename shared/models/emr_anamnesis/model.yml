@@ -20,11 +20,11 @@ columns:
     type: text
     comment: riwayat pengobatan
   created_by: uuid
-  created_date:
-    type: datetime
-    required: true
   deleted_date: datetime
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

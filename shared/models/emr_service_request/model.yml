@@ -23,11 +23,11 @@ columns:
     required: true
     comment: kondisi pasien saat meninggalkan klinik
   created_by: uuid
-  created_date:
-    type: datetime
-    required: true
   deleted_at: datetime
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

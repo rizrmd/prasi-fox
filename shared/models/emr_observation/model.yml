@@ -30,12 +30,12 @@ columns:
   mental_status:
     type: text
     comment: status psikologis
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   deleted_at: datetime
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

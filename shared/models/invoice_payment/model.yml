@@ -20,16 +20,16 @@ columns:
     type: text
     required: true
   reference_number: text
-  created_date:
-    type: datetime
-    required: true
   created_by: uuid
   deleted_at: datetime
   status:
     type: text
     required: true
     comment: pending/paid/failed/cancelled
-  updated_date:
+  created_at:
+    type: datetime
+    default: now()
+  updated_at:
     type: datetime
     default: now()
   updated_by: uuid

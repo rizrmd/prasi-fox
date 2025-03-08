@@ -2,6 +2,7 @@ import { sql } from "bun";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { stringify } from "yaml";
+import { auditColumns } from "./model-utils";
 
 // Types for better type safety
 type TableColumn = {
@@ -261,6 +262,15 @@ function processTableColumns(
         table.columns[row.column_name] = columnDef.type;
       } else {
         table.columns[row.column_name] = columnDef;
+      }
+    }
+  }
+
+  // Add audit columns to each table model
+  for (const [, model] of tableMap) {
+    for (const [columnName, columnDef] of Object.entries(auditColumns)) {
+      if (!model.columns[columnName]) {
+        model.columns[columnName] = columnDef;
       }
     }
   }

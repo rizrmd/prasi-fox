@@ -8,9 +8,14 @@ columns:
     type: text
     required: true
   created_date: datetime
-  updated_date: datetime
   deleted_at: datetime
+  created_at:
+    type: datetime
+    default: now()
   created_by: uuid
+  updated_at:
+    type: datetime
+    default: now()
   updated_by: uuid
 relations:
   client:
