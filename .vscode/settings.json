@@ -12,7 +12,8 @@
     "shared/package.json": true,
     "bun.lock": true,
     "system/src/config": true,
-    ".gitignore": true
+    ".gitignore": true,
+    "package-lock.json": true
   },
   "hide-files.files": [
     "node_modules",
@@ -21,7 +22,8 @@
     "shared/package.json",
     "bun.lock",
     "system/src/config",
-    ".gitignore"
+    ".gitignore",
+    "package-lock.json"
   ],
   "yaml.schemas": {
     "./system/docs/schema/model.json": "**/model.yml",
