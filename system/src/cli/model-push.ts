@@ -394,17 +394,18 @@ export async function modelPush() {
                   }
 
                   const constraintName = `fk_${rel.from}_${refTable}`;
-                  const alterQuery = `ALTER TABLE ${model.table} ADD CONSTRAINT ${constraintName} FOREIGN KEY (${rel.from}) REFERENCES ${actualRefTable}(${refColumn});`;
+                  let sqlQuery = `ALTER TABLE ${model.table} ADD CONSTRAINT ${constraintName} FOREIGN KEY (${rel.from}) REFERENCES ${actualRefTable}(${refColumn});`;
+                  
+                  // Add comment to constraint if specified
+                  if (rel.comment) {
+                    sqlQuery += `\nCOMMENT ON CONSTRAINT ${constraintName} ON ${model.table} IS '${rel.comment}';`;
+                  }
+                  
                   try {
                     console.log(`🔗 Adding relation: ${tableName}.${relationName} -> ${refTable}`);
-                    await tx.unsafe(alterQuery);
+                    console.log(`🔧 SQL: ${sqlQuery}`);
+                    await tx.unsafe(sqlQuery);
                     updates++;
-
-                    // Add comment to constraint if specified
-                    if (rel.comment) {
-                      const commentQuery = `COMMENT ON CONSTRAINT ${constraintName} ON ${model.table} IS '${rel.comment}';`;
-                      await tx.unsafe(commentQuery);
-                    }
                   } catch (error) {
                     console.error(`❌ Error adding relation ${tableName}.${relationName} -> ${refTable}:`, error);
                     throw error; // Re-throw to trigger transaction rollback
