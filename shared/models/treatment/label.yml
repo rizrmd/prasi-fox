@@ -1,10 +1,10 @@
 title: Treatment
 record_title: [code, name]
 labels:
-  code: [1, Code]
-  name: [2, Name]
+  code: [1, Code, required]
+  name: [2, Name, required]
   version: [3, Version]
-  created_date: [4, Created Date]
+  created_date: [4, Created Date, required]
   updated_date: [5, Updated Date]
-  client: [6, Client]
-  emr_diagnosis_treatment: [7, Emr Diagnosis Treatment]
+  emr_diagnosis_treatment: [6, Emr Diagnosis Treatment]
+  client: [7, Client]

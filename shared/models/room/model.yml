@@ -3,13 +3,21 @@ columns:
   id:
     type: uuid
     primary: true
-  name: text
-  status: text
+    required: true
+  name:
+    type: text
+    required: true
+  status:
+    type: text
+    required: true
+    comment: Occupied, Unoccupied, Housekeeping, Closed
   service_class: text
   longitude: text
   latitude: text
   description: text
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   updated_date: datetime
   updated_by: uuid

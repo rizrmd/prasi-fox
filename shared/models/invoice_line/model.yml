@@ -3,21 +3,26 @@ columns:
   id:
     type: uuid
     primary: true
-  description: text
-  quantity: text
+    required: true
+  description:
+    type: text
+    required: true
+  quantity:
+    type: text
+    required: true
   unit_price: text
-  total_price: text
-  created_date: datetime
+  total_price:
+    type: text
+    required: true
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
   treatment_name: text
   id_treatment: uuid
   medicine_name: text
   id_medicine: uuid
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to

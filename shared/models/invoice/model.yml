@@ -3,23 +3,57 @@ columns:
   id:
     type: uuid
     primary: true
-  invoice_number: text
-  patient_name: text
-  invoice_date: datetime
-  total_amount: text
-  status: text
-  created_date: datetime
+    required: true
+  invoice_number:
+    type: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  invoice_date:
+    type: datetime
+    required: true
+  total_amount:
+    type: text
+    required: true
+  status:
+    type: text
+    required: true
+    comment: pending/paid/failed/cancelled
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
+  bpjs_log:
+    type: has_many
+    from: id
+    to: bpjs_log.id_invoice
   client:
     type: belongs_to
     from: id_client
     to: client.id
+  encounter:
+    type: belongs_to
+    from: id_encounter
+    to: encounter.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
+  prescription:
+    type: belongs_to
+    from: id_prescription
+    to: prescriptions.id
+  prescription_queue:
+    type: belongs_to
+    from: id_prescription_queue
+    to: prescriptions_queue.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id
   invoice_claim:
     type: has_many
     from: id
@@ -32,27 +66,3 @@ relations:
     type: has_many
     from: id
     to: invoice_payment.id_invoice
-  bpjs_log:
-    type: has_many
-    from: id
-    to: bpjs_log.id_invoice
-  patient:
-    type: belongs_to
-    from: id_patient
-    to: patient.id
-  staff:
-    type: belongs_to
-    from: id_staff
-    to: staff.id
-  encounter:
-    type: belongs_to
-    from: id_encounter
-    to: encounter.id
-  prescription:
-    type: belongs_to
-    from: id_prescription
-    to: prescriptions.id
-  prescription_queue:
-    type: belongs_to
-    from: id_prescription_queue
-    to: prescriptions_queue.id

@@ -3,21 +3,36 @@ columns:
   id:
     type: uuid
     primary: true
-  invoice_number: text
-  patient_name: text
-  claim_date: datetime
-  payer_type: text
+    required: true
+  invoice_number:
+    type: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  claim_date:
+    type: datetime
+    required: true
+  payer_type:
+    type: text
+    required: true
+    comment: BPJS, Allianz, Prudential dll
   payer_number: text
-  claim_amount: text
-  approved_amount: text
-  claim_status: text
-  created_date: datetime
+  claim_amount:
+    type: text
+    required: true
+  approved_amount:
+    type: text
+    required: true
+  claim_status:
+    type: text
+    required: true
+    comment: submitted, approved, rejected
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to

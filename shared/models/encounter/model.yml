@@ -3,47 +3,32 @@ columns:
   id:
     type: uuid
     primary: true
-  patient_name: text
+    required: true
+  patient_name:
+    type: text
+    required: true
   doctor_name: text
-  encounter_type: text
-  encounter_date: datetime
-  created_date: datetime
+  encounter_type:
+    type: text
+    required: true
+    comment: rawat jalan/rawat inap/igd
+  encounter_date:
+    type: datetime
+    required: true
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  status: text
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
+  status:
+    type: text
+    required: true
+    comment: planned/arrived/triaged/in-progress/onleave/finished/cancelled
 relations:
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  patient:
-    type: belongs_to
-    from: id_patient
-    to: patient.id
-  staff:
-    type: belongs_to
-    from: id_staff
-    to: staff.id
-  poli:
-    type: belongs_to
-    from: id_poli
-    to: poli.id
-  prescriptions_queue:
-    type: has_many
-    from: id
-    to: prescriptions_queue.id_encounter
-  invoice:
-    type: has_many
-    from: id
-    to: invoice.id_encounter
-  room:
-    type: belongs_to
-    from: id_room
-    to: room.id
   emr_patient:
     type: belongs_to
     from: id_emr_patient
@@ -52,7 +37,31 @@ relations:
     type: belongs_to
     from: id_medical_service
     to: medical_service.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
   patient_queue:
     type: belongs_to
     from: id_patient_queue
     to: patient_queue.id
+  poli:
+    type: belongs_to
+    from: id_poli
+    to: poli.id
+  room:
+    type: belongs_to
+    from: id_room
+    to: room.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_encounter
+  prescriptions_queue:
+    type: has_many
+    from: id
+    to: prescriptions_queue.id_encounter

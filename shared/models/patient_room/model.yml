@@ -3,35 +3,47 @@ columns:
   id:
     type: uuid
     primary: true
-  patient_name: text
-  contact_name: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  contact_name:
+    type: text
+    required: true
   phone_number: text
-  admission_date: datetime
+  admission_date:
+    type: datetime
+    required: true
   referral_letter_number: text
   referring_physician: text
-  room_name: text
-  doctor_name: text
+  room_name:
+    type: text
+    required: true
+  doctor_name:
+    type: text
+    required: true
   created_by: uuid
-  created_date: datetime
-  deleted_at: datetime
-  admission_reason: text
-  updated_date:
+  created_date:
     type: datetime
-    default: now()
-  updated_by: uuid
+    required: true
+  deleted_at: datetime
+  admission_reason:
+    type: text
+    required: true
+    comment: direct/followup
 relations:
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  patient:
-    type: belongs_to
-    from: id_patient
-    to: patient.id
   doctor:
     type: belongs_to
     from: id_doctor
     to: staff.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
   room:
     type: belongs_to
     from: id_room

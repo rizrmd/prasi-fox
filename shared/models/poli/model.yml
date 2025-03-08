@@ -3,27 +3,29 @@ columns:
   id:
     type: uuid
     primary: true
-  name: text
-  status: text
-  created_date: datetime
+    required: true
+  name:
+    type: text
+    required: true
+  status:
+    type: text
+    required: true
+    comment: active/suspended/inactive
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   updated_date: datetime
   updated_by: uuid
   deleted_at: datetime
-  poli_code: text
+  poli_code:
+    type: text
+    comment: kode poli = A/B/C
 relations:
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  encounter:
-    type: has_many
-    from: id
-    to: encounter.id_poli
-  patient_queue:
-    type: has_many
-    from: id
-    to: patient_queue.id_poli
   schedule_doctor:
     type: has_many
     from: id
@@ -32,3 +34,11 @@ relations:
     type: has_many
     from: id
     to: schedule_poli.id_poli
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_poli
+  patient_queue:
+    type: has_many
+    from: id
+    to: patient_queue.id_poli

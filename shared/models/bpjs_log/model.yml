@@ -3,19 +3,29 @@ columns:
   id:
     type: uuid
     primary: true
-  patient_name: text
-  bpjs_number: text
-  transaction_date: datetime
-  claim_amount: text
-  claim_status: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  bpjs_number:
+    type: text
+    required: true
+  transaction_date:
+    type: datetime
+    required: true
+  claim_amount:
+    type: text
+    required: true
+  claim_status:
+    type: text
+    required: true
+    comment: submitted, approved, rejected
   notes: text
   created_by: uuid
-  created_date: datetime
-  deleted_at: datetime
-  updated_date:
+  created_date:
     type: datetime
-    default: now()
-  updated_by: uuid
+    required: true
+  deleted_at: datetime
 relations:
   client:
     type: belongs_to

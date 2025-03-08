@@ -3,28 +3,35 @@ columns:
   id:
     type: uuid
     primary: true
-  staff_name: text
-  staff_role: text
-  activity_type: text
+    required: true
+  staff_name:
+    type: text
+    required: true
+  staff_role:
+    type: text
+    required: true
+  activity_type:
+    type: text
+    required: true
   activity_description: text
-  date: datetime
-  created_date: datetime
+  date:
+    type: datetime
+    required: true
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  staff_role:
-    type: belongs_to
-    from: id_staff_role
-    to: staff_role.id
   staff:
     type: belongs_to
     from: id_staff
     to: staff.id
+  staff_role:
+    type: belongs_to
+    from: id_staff_role
+    to: staff_role.id

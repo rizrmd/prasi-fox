@@ -3,22 +3,31 @@ columns:
   id:
     type: uuid
     primary: true
-  endpoint: text
-  request_body: json
+    required: true
+  endpoint:
+    type: text
+    required: true
+  request_body:
+    type: json
+    required: true
   response_body: json
-  status_code: number
-  status: text
+  status_code:
+    type: number
+    required: true
+  status:
+    type: text
+    required: true
+    comment: pending/success/failed
   error_message: text
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
   resource_data:
     type: json
+    required: true
     default: "{}"
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to

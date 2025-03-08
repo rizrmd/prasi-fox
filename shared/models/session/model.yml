@@ -3,21 +3,19 @@ columns:
   id:
     type: uuid
     primary: true
-  created_at: datetime
+    required: true
+  created_at:
+    type: datetime
+    required: true
   status:
     type: text
+    required: true
     default: active
+    comment: active, expired
   expired_at: datetime
-  device_uuid: uuid
-  created_date:
-    type: datetime
-    default: now()
-  created_by: uuid
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
-  deleted_at: datetime
+  device_uuid:
+    type: uuid
+    required: true
 relations:
   user:
     type: belongs_to

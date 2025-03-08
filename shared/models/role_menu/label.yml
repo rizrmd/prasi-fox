@@ -1,9 +1,9 @@
 title: Role menu
 record_title: [url_pattern]
 labels:
-  url_pattern: [1, Url Pattern]
+  url_pattern: [1, Url Pattern, required]
   created_date: [2, Created Date]
   updated_date: [3, Updated Date]
   client: [4, Client]
-  staff_role: [5, Staff Role]
-  menu: [6, Menu]
+  menu: [5, Menu]
+  staff_role: [6, Staff Role]

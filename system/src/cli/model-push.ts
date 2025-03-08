@@ -41,10 +41,9 @@ async function dropAllTables(): Promise<void> {
   });
 }
 
-// Format column definition
 // Format enum values as a comment string
-function formatEnumComment(values: string[]): string {
-  return `enum:(${values.join(",")})`;
+function formatEnumComment(values: string[], comment?: string): string {
+  return `enum:(${values.join(",")})${comment ? ' ' + comment : ''}`;
 }
 
 function formatColumn(name: string, def: string | ColumnDefinition): string {
@@ -69,25 +68,32 @@ function formatColumn(name: string, def: string | ColumnDefinition): string {
     } else if (def.primary && def.type === "uuid") {
       colDef += ` DEFAULT gen_random_uuid()`;
     }
+    
+    // Add NOT NULL constraint for required fields
+    if (def.required) {
+      colDef += " NOT NULL";
+    }
   }
 
   return colDef;
 }
 
-// Get comment SQL for column if it has enum values
+// Get comment SQL for column if it has a comment or enum values
 function getColumnCommentSQL(
   tableName: string,
   columnName: string,
   def: string | ColumnDefinition
 ): string | null {
-  if (
-    typeof def === "object" &&
-    def.type === "enum" &&
-    Array.isArray(def.values)
-  ) {
-    return `COMMENT ON COLUMN ${tableName}.${columnName} IS '${formatEnumComment(
-      def.values
-    )}';`;
+  if (typeof def === "object") {
+    if (def.type === "enum" && Array.isArray(def.values)) {
+      return `COMMENT ON COLUMN ${tableName}.${columnName} IS '${formatEnumComment(
+        def.values,
+        def.comment
+      )}';`;
+    } else if (def.comment) {
+      // Handle regular comments for non-enum columns
+      return `COMMENT ON COLUMN ${tableName}.${columnName} IS '${def.comment}';`;
+    }
   }
   return null;
 }
@@ -151,6 +157,7 @@ function generateUpdateSQL(
           refColumn
         );
         if (refType) {
+          // For foreign key columns, we'll add the column but without the constraint
           columns.set(rel.from, refType);
         }
       }
@@ -204,44 +211,54 @@ function sortModels(
   const sorted: [string, ModelDefinition][] = [];
   const visited = new Set<string>();
   const visiting = new Set<string>();
+  const processedTables = new Set<string>();
 
   function visit(tableName: string, model: ModelDefinition) {
     if (visited.has(tableName)) return;
     if (visiting.has(tableName)) {
       console.log(`⚠️  Circular dependency detected for table: ${tableName}`);
-      visited.add(tableName);
+      // Don't mark as visited yet, we'll handle it in a separate pass
       return;
     }
 
     visiting.add(tableName);
 
     if (model.relations) {
-      for (const [_, rel] of Object.entries(model.relations)) {
+      Object.entries(model.relations).forEach(([_, rel]) => {
         if (rel.type === "belongs_to") {
-          const [refTable] = rel.to.split(".");
-          if (!refTable) continue;
-          const actualRefTable = models.get(refTable)?.table || refTable; // Use actual table name
-          if (
-            actualRefTable &&
-            models.has(actualRefTable) &&
-            !visited.has(actualRefTable)
-          ) {
-            visit(actualRefTable, models.get(actualRefTable)!);
+          const [refTable, refColumn] = rel.to.split(".");
+          if (refTable && refColumn) {
+            const refModel = models.get(refTable);
+            if (refModel) {
+              visit(refTable, refModel);
+            }
           }
         }
-      }
+      });
     }
 
     visiting.delete(tableName);
     visited.add(tableName);
-    sorted.push([tableName, model]);
-  }
-
-  for (const [tableName, model] of models.entries()) {
-    if (!visited.has(tableName)) {
-      visit(tableName, model);
+    
+    // Only add to sorted if we haven't processed this table yet
+    if (!processedTables.has(tableName)) {
+      sorted.push([tableName, model]);
+      processedTables.add(tableName);
     }
   }
+
+  // First pass: try to resolve dependencies naturally
+  models.forEach((model, tableName) => {
+    visit(tableName, model);
+  });
+  
+  // Second pass: add any remaining tables (with circular dependencies)
+  models.forEach((model, tableName) => {
+    if (!processedTables.has(tableName)) {
+      sorted.push([tableName, model]);
+      processedTables.add(tableName);
+    }
+  });
 
   return sorted;
 }
@@ -253,25 +270,73 @@ export async function modelPush() {
     process.exit(1);
   }
 
+  // Check if --skip-relations flag is present
+  const skipRelations = process.argv.includes("--skip-relations");
+
   const url = new URL(connectionString);
   url.searchParams.set("sslmode", "prefer");
 
-  console.log("🔌 Connecting to database...");
+  console.log("Connecting to:", url.host);
 
   try {
     await sql`SELECT 1`;
     console.log("✅ Connected to database");
 
-    console.log("🗑️  Dropping existing tables...");
-    await dropAllTables();
-
+    // Load model definitions first to calculate statistics
     const allModels = await loadModelFiles(
       join(process.cwd(), "shared/models")
     );
     const sortedModels = sortModels(allModels);
-    console.log(`📚 Found ${sortedModels.length} model(s)`);
+    
+    // Calculate statistics from model definitions
+    console.log("📊 Analyzing model definitions...");
+    const uniqueTableCount = allModels.size;
+    console.log(`Found ${uniqueTableCount} unique tables to be created`);
+    
+    // Count foreign key relationships
+    let foreignKeyCount = 0;
+    for (const [_, model] of allModels) {
+      if (model.relations) {
+        for (const [__, rel] of Object.entries(model.relations)) {
+          if (rel.type === "belongs_to") {
+            foreignKeyCount++;
+          }
+        }
+      }
+    }
+    console.log(`Found ${foreignKeyCount} foreign key relationships to be created${skipRelations ? ' (will be skipped)' : ''}`);
+
+    // Check for existing tables
+    const existingTables = await sql`SELECT tablename FROM pg_tables WHERE schemaname = 'public';`;
+    if (existingTables.length > 0) {
+      console.warn(`⚠️ WARNING: ${existingTables.length} existing tables found. Dropping tables will result in DATA LOSS!`);
+      
+      // Ask for confirmation
+      const rl = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      
+      const confirmation = await new Promise<string>((resolve) => {
+        rl.question('Are you sure you want to continue? This will DELETE ALL DATA. Type "y" to continue: ', (answer: string) => {
+          resolve(answer);
+          rl.close();
+        });
+      });
+      
+      if (confirmation.toLowerCase() !== 'y' && confirmation.toLowerCase() !== 'yes') {
+        console.log('Operation cancelled.');
+        process.exit(0);
+      }
+    }
+
+    console.log("🗑️  Dropping existing tables...");
+    await dropAllTables();
+
+    console.log(`📚 Creating ${sortedModels.length} model(s)`);
 
     let updates = 0;
+    const processedTables = new Set<string>();
 
     // Create a map of model names to their actual table names
     const tableNameMap = new Map<string, string>();
@@ -280,8 +345,15 @@ export async function modelPush() {
     }
 
     // First create all tables with their columns (no foreign keys yet)
+    console.log("📊 Phase 1: Creating tables without foreign key constraints...");
     await sql.begin(async (tx) => {
       for (const [tableName, model] of sortedModels) {
+        // Skip if we've already processed this table
+        if (processedTables.has(tableName)) {
+          console.log(`⏭️  Skipping duplicate table: ${tableName}`);
+          continue;
+        }
+        
         // Create table with columns but without foreign key constraints
         const createTableSQL = generateUpdateSQL(
           model,
@@ -289,43 +361,66 @@ export async function modelPush() {
           allModels
         );
         if (createTableSQL) {
-          console.log(`📝 Creating table: ${tableName}`);
-          await tx.unsafe(createTableSQL);
-          updates++;
-        }
-      }
-    });
-
-    // Then add all foreign key constraints
-    await sql.begin(async (tx) => {
-      for (const [tableName, model] of sortedModels) {
-        if (model.relations) {
-          for (const [_, rel] of Object.entries(model.relations)) {
-            if (rel.type === "belongs_to") {
-              const [refTable, refColumn] = rel.to.split(".");
-              if (refTable && refColumn) {
-                // Use the actual table name from our map
-                const actualRefTable = tableNameMap.get(refTable);
-                if (!actualRefTable) {
-                  console.warn(
-                    `⚠️ Could not find actual table name for ${refTable}, skipping relation`
-                  );
-                  continue;
-                }
-
-                const alterQuery = `ALTER TABLE ${model.table} ADD CONSTRAINT fk_${rel.from}_${refTable} FOREIGN KEY (${rel.from}) REFERENCES ${actualRefTable}(${refColumn});`;
-                console.log(`🔗 Adding relation: ${tableName} -> ${refTable}`);
-                await tx.unsafe(alterQuery);
-                updates++;
-              }
-            }
+          try {
+            console.log(`📝 Creating table: ${tableName}`);
+            await tx.unsafe(createTableSQL);
+            processedTables.add(tableName);
+            updates++;
+          } catch (error) {
+            console.error(`❌ Error creating table ${tableName}:`, error);
+            throw error; // Re-throw to trigger transaction rollback
           }
         }
       }
     });
 
+    // Then add all foreign key constraints unless --skip-relations flag is set
+    if (!skipRelations) {
+      console.log("🔗 Phase 2: Adding foreign key constraints...");
+      await sql.begin(async (tx) => {
+        for (const [tableName, model] of sortedModels) {
+          if (model.relations) {
+            for (const [relationName, rel] of Object.entries(model.relations)) {
+              if (rel.type === "belongs_to") {
+                const [refTable, refColumn] = rel.to.split(".");
+                if (refTable && refColumn) {
+                  // Use the actual table name from our map
+                  const actualRefTable = tableNameMap.get(refTable);
+                  if (!actualRefTable) {
+                    console.warn(
+                      `⚠️ Could not find actual table name for ${refTable}, skipping relation`
+                    );
+                    continue;
+                  }
+
+                  const constraintName = `fk_${rel.from}_${refTable}`;
+                  const alterQuery = `ALTER TABLE ${model.table} ADD CONSTRAINT ${constraintName} FOREIGN KEY (${rel.from}) REFERENCES ${actualRefTable}(${refColumn});`;
+                  try {
+                    console.log(`🔗 Adding relation: ${tableName}.${relationName} -> ${refTable}`);
+                    await tx.unsafe(alterQuery);
+                    updates++;
+
+                    // Add comment to constraint if specified
+                    if (rel.comment) {
+                      const commentQuery = `COMMENT ON CONSTRAINT ${constraintName} ON ${model.table} IS '${rel.comment}';`;
+                      await tx.unsafe(commentQuery);
+                    }
+                  } catch (error) {
+                    console.error(`❌ Error adding relation ${tableName}.${relationName} -> ${refTable}:`, error);
+                    throw error; // Re-throw to trigger transaction rollback
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+    } else {
+      console.log("🚫 Phase 2: Skipping foreign key constraints (--skip-relations flag set)");
+    }
+
     console.log(
-      `\n✅ Successfully applied ${updates} schema update(s) and constraints`
+      `\n✅ Successfully applied ${updates} schema update(s)${skipRelations ? ' (relations skipped)' : ' and constraints'}`
     );
   } catch (error) {
     console.error("Failed to update database schema:", error);

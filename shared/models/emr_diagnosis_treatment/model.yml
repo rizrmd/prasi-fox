@@ -3,18 +3,23 @@ columns:
   id:
     type: uuid
     primary: true
-  diagnosis: text
-  treatment: text
-  medicine: text
+    required: true
+  diagnosis:
+    type: text
+    required: true
+  treatment:
+    type: text
+    required: true
+  medicine:
+    type: text
+    required: true
   medicine_rules: text
   notes: text
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to

@@ -3,20 +3,30 @@ columns:
   id:
     type: uuid
     primary: true
-  service_request_type: text
-  service_request_description: text
-  referral_destination: text
+    required: true
+  service_request_type:
+    type: text
+    required: true
+    comment: internal/eksternal
+  service_request_description:
+    type: text
+    required: true
+    comment: rujuk/rawat inap/kontrol/konsultasi
+  referral_destination:
+    type: text
+    comment: nama fasyankes tujuan rujukan
   referral_poli: text
   referral_doctor: text
   request_date: datetime
-  condition_patient: text
+  condition_patient:
+    type: text
+    required: true
+    comment: kondisi pasien saat meninggalkan klinik
   created_by: uuid
-  created_date: datetime
-  deleted_at: datetime
-  updated_date:
+  created_date:
     type: datetime
-    default: now()
-  updated_by: uuid
+    required: true
+  deleted_at: datetime
 relations:
   client:
     type: belongs_to

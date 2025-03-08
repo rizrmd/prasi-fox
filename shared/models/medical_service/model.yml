@@ -3,12 +3,19 @@ columns:
   id:
     type: uuid
     primary: true
-  name: text
+    required: true
+  name:
+    type: text
+    required: true
   code: text
   description: text
-  price: text
+  price:
+    type: text
+    required: true
   created_by: uuid
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   updated_by: uuid
   updated_date: datetime
   deleted_at: datetime

@@ -3,25 +3,39 @@ columns:
   id:
     type: uuid
     primary: true
-  code: text
-  name: text
+    required: true
+  code:
+    type: text
+    required: true
+  name:
+    type: text
+    required: true
   package: text
   stock: text
   expired_date: datetime
   manufacturer: text
-  is_fast_moving: boolean
+  is_fast_moving:
+    type: boolean
+    comment: Ya/Tidak
   dosage: text
   price: text
   ingredients: text
   created_date:
     type: datetime
+    required: true
     default: now()
   updated_date: datetime
   created_by: uuid
   updated_by: uuid
   deleted_at: datetime
-  category: text
+  category:
+    type: text
+    comment: kategori obat
 relations:
+  emr_diagnosis_treatment:
+    type: has_many
+    from: id
+    to: emr_diagnosis_treatment.id_medicine
   client:
     type: belongs_to
     from: id_client
@@ -30,7 +44,3 @@ relations:
     type: has_many
     from: id
     to: prescriptions.id_medicine
-  emr_diagnosis_treatment:
-    type: has_many
-    from: id
-    to: emr_diagnosis_treatment.id_medicine

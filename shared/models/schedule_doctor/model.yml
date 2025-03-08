@@ -3,29 +3,41 @@ columns:
   id:
     type: uuid
     primary: true
-  doctor_name: text
-  created_date: datetime
+    required: true
+  doctor_name:
+    type: text
+    required: true
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   updated_date: datetime
   updated_by: uuid
   deleted_at: datetime
-  day: text
-  start_time: datetime
-  end_time: datetime
+  day:
+    type: text
+    required: true
+    comment: Senin/Selasa/Rabu/Kamis/Jumat/Sabtu/Minggu
+  start_time:
+    type: datetime
+    required: true
+  end_time:
+    type: datetime
+    required: true
 relations:
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  staff_role:
-    type: belongs_to
-    from: id_staff_role
-    to: staff_role.id
-  staff:
-    type: belongs_to
-    from: id_staff
-    to: staff.id
   poli:
     type: belongs_to
     from: id_poli
     to: poli.id
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id
+  staff_role:
+    type: belongs_to
+    from: id_staff_role
+    to: staff_role.id

@@ -3,30 +3,40 @@ columns:
   id:
     type: uuid
     primary: true
-  patient_name: text
-  doctor_name: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  doctor_name:
+    type: text
+    required: true
   medicine_code: text
-  medicine_name: text
+  medicine_name:
+    type: text
+    required: true
   dosage: text
-  dosage_instructions: text
+  dosage_instructions:
+    type: text
+    required: true
   notes: text
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  quantity: text
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
+  quantity:
+    type: text
+    required: true
+    comment: jumlah obat
 relations:
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_prescription
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  patient:
-    type: belongs_to
-    from: id_patient
-    to: patient.id
   doctor:
     type: belongs_to
     from: id_doctor
@@ -39,6 +49,10 @@ relations:
     type: belongs_to
     from: id_medicine
     to: medicine.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
   staff:
     type: belongs_to
     from: id_staff
@@ -47,7 +61,3 @@ relations:
     type: has_many
     from: id
     to: prescriptions_queue.id_prescription
-  invoice:
-    type: has_many
-    from: id
-    to: invoice.id_prescription

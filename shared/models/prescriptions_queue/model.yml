@@ -3,45 +3,55 @@ columns:
   id:
     type: uuid
     primary: true
-  queue_number: text
-  patient_name: text
-  doctor_name: text
-  date: datetime
-  prescription_status: text
-  created_date: datetime
+    required: true
+  queue_number:
+    type: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  doctor_name:
+    type: text
+    required: true
+  date:
+    type: datetime
+    required: true
+  prescription_status:
+    type: text
+    required: true
+    comment: received/processed/picked up/cancelled
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
   id_medicine: uuid
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_prescription_queue
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  patient:
-    type: belongs_to
-    from: id_patient
-    to: patient.id
   doctor:
     type: belongs_to
     from: id_doctor
-    to: staff.id
-  staff:
-    type: belongs_to
-    from: id_staff
     to: staff.id
   encounter:
     type: belongs_to
     from: id_encounter
     to: encounter.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
   prescription:
     type: belongs_to
     from: id_prescription
     to: prescriptions.id
-  invoice:
-    type: has_many
-    from: id
-    to: invoice.id_prescription_queue
+  staff:
+    type: belongs_to
+    from: id_staff
+    to: staff.id

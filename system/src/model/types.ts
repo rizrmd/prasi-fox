@@ -1,9 +1,10 @@
-
 export interface ColumnDefinition {
   type: string;
   primary?: boolean;
   default?: string | number | boolean;
   values?: string[];
+  required?: boolean;
+  comment?: string;
 }
 
 export type RelationType = "has_many" | "belongs_to";
@@ -12,6 +13,7 @@ export interface RelationDefinition {
   type: RelationType;
   from: string;
   to: string;
+  comment?: string;
 }
 
 export interface ModelDefinition {

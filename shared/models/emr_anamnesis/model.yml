@@ -3,19 +3,27 @@ columns:
   id:
     type: uuid
     primary: true
-  condition_patient: text
-  medical_history: text
-  familymember_history: text
-  allergy_intolerance: text
-  medication_statement: text
+    required: true
+  condition_patient:
+    type: text
+    required: true
+  medical_history:
+    type: text
+    comment: riwayat penyakit
+  familymember_history:
+    type: text
+    comment: riwayat penyakit keluarga
+  allergy_intolerance:
+    type: text
+    comment: riwayat alergi
+  medication_statement:
+    type: text
+    comment: riwayat pengobatan
   created_by: uuid
-  created_date: datetime
-  deleted_date: datetime
-  updated_date:
+  created_date:
     type: datetime
-    default: now()
-  updated_by: uuid
-  deleted_at: datetime
+    required: true
+  deleted_date: datetime
 relations:
   client:
     type: belongs_to

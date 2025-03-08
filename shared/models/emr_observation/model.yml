@@ -3,21 +3,38 @@ columns:
   id:
     type: uuid
     primary: true
-  heart_rate: text
-  breaths: text
-  blood_pressure: text
-  body_temperature: text
-  responsiveness: text
-  body_height: text
-  body_weight: text
-  mental_status: text
-  created_date: datetime
+    required: true
+  heart_rate:
+    type: text
+    required: true
+    comment: denyut jantung
+  breaths:
+    type: text
+    comment: pernapasan
+  blood_pressure:
+    type: text
+    required: true
+    comment: tekanan darah
+  body_temperature:
+    type: text
+    comment: suhu tubuh
+  responsiveness:
+    type: text
+    comment: tingkat kesadaran
+  body_height:
+    type: text
+    comment: tinggi badan
+  body_weight:
+    type: text
+    comment: berat badan
+  mental_status:
+    type: text
+    comment: status psikologis
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to

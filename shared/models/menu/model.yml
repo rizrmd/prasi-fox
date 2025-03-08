@@ -3,33 +3,30 @@ columns:
   id:
     type: uuid
     primary: true
+    required: true
   id_parent: uuid
-  name: text
-  url_menu: text
+  name:
+    type: text
+    required: true
+  url_menu:
+    type: text
+    required: true
   is_active: boolean
   sequence: number
   created_at: datetime
   update_at: datetime
   deleted_at: datetime
   description: text
-  created_date:
-    type: datetime
-    default: now()
-  created_by: uuid
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
 relations:
   client:
     type: belongs_to
     from: id_client
     to: client.id
-  user_menu:
-    type: has_many
-    from: id
-    to: user_menu.id_menu
   role_menu:
     type: has_many
     from: id
     to: role_menu.id_menu
+  user_menu:
+    type: has_many
+    from: id
+    to: user_menu.id_menu

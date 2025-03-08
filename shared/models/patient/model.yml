@@ -3,66 +3,82 @@ columns:
   id:
     type: uuid
     primary: true
-  name: text
-  nik: text
-  birth_date: datetime
+    required: true
+  name:
+    type: text
+    required: true
+  nik:
+    type: text
+    required: true
+  birth_date:
+    type: datetime
+    required: true
   birth_place: text
-  gender: text
+  gender:
+    type: text
+    required: true
+    comment: laki=laki/perempuan
   address: text
   phone_number: text
   ihs_number: text
   emr_number: text
   bpjs_number: text
-  multiple_birth: boolean
+  multiple_birth:
+    type: boolean
+    comment: ya/tidak
   linked_patient_id: uuid
-  relationship_type: text
-  created_date: datetime
+  relationship_type:
+    type: text
+    comment: family
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   updated_by: uuid
   updated_date: datetime
   deleted_at: datetime
 relations:
-  client:
-    type: belongs_to
-    from: id_client
-    to: client.id
-  encounter:
-    type: has_many
-    from: id
-    to: encounter.id_patient
-  patient_queue:
-    type: has_many
-    from: id
-    to: patient_queue.id_patient
-  invoice_claim:
-    type: has_many
-    from: id
-    to: invoice_claim.id_patient
-  patient_room:
-    type: has_many
-    from: id
-    to: patient_room.id_patient
-  prescriptions_queue:
-    type: has_many
-    from: id
-    to: prescriptions_queue.id_patient
-  invoice:
-    type: has_many
-    from: id
-    to: invoice.id_patient
-  invoice_payment:
-    type: has_many
-    from: id
-    to: invoice_payment.id_patient
-  prescriptions:
-    type: has_many
-    from: id
-    to: prescriptions.id_patient
   emr:
     type: has_many
     from: id
     to: emr.id_patient
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
   bpjs_log:
     type: has_many
     from: id
     to: bpjs_log.id_patient
+  encounter:
+    type: has_many
+    from: id
+    to: encounter.id_patient
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_patient
+  invoice_claim:
+    type: has_many
+    from: id
+    to: invoice_claim.id_patient
+  invoice_payment:
+    type: has_many
+    from: id
+    to: invoice_payment.id_patient
+  patient_queue:
+    type: has_many
+    from: id
+    to: patient_queue.id_patient
+  patient_room:
+    type: has_many
+    from: id
+    to: patient_room.id_patient
+  prescriptions:
+    type: has_many
+    from: id
+    to: prescriptions.id_patient
+  prescriptions_queue:
+    type: has_many
+    from: id
+    to: prescriptions_queue.id_patient

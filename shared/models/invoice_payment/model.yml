@@ -3,20 +3,32 @@ columns:
   id:
     type: uuid
     primary: true
-  patient_name: text
-  invoice_number: text
-  payment_date: datetime
-  payment_method: text
-  amount_paid: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  invoice_number:
+    type: text
+    required: true
+  payment_date:
+    type: datetime
+    required: true
+  payment_method:
+    type: text
+    required: true
+  amount_paid:
+    type: text
+    required: true
   reference_number: text
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  status: text
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
+  status:
+    type: text
+    required: true
+    comment: pending/paid/failed/cancelled
 relations:
   client:
     type: belongs_to

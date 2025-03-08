@@ -3,51 +3,76 @@ columns:
   id:
     type: uuid
     primary: true
-  patient_name: text
-  queue_number: text
-  registered_date: datetime
-  patient_phone: text
-  channel_name: text
-  queue_status: text
+    required: true
+  patient_name:
+    type: text
+    required: true
+  queue_number:
+    type: text
+    required: true
+  registered_date:
+    type: datetime
+    required: true
+    comment: untuk filter data yang tampil hari ini (date now)
+  patient_phone:
+    type: text
+    comment: no telepon pasien
+  channel_name:
+    type: text
+    comment: walk in, online, whatsapp, telepon
+  queue_status:
+    type: text
+    required: true
+    comment: registered/completed/rescheduled/canceled/expired
   reschedule_date: datetime
-  referral_letter_number: text
-  referring_physician: text
-  created_date: datetime
+  referral_letter_number:
+    type: text
+    comment: no surat rujukan
+  referring_physician:
+    type: text
+    comment: petugas yg merujuk
+  created_date:
+    type: datetime
+    required: true
   created_by: uuid
   deleted_at: datetime
-  is_referred: boolean
+  is_referred:
+    type: boolean
+    comment: ya/tidak
   reservation_doctor: text
   reservation_poli: text
   reservation_date: datetime
-  contact_name: text
-  contact_phone: text
+  contact_name:
+    type: text
+    comment: penanggung jawab pasien
+  contact_phone:
+    type: text
+    comment: no telp penanggung jawab pasien
   has_bpjs:
     type: boolean
     default: "true"
   bpjs_number: text
-  referring_faskes: text
-  updated_date:
-    type: datetime
-    default: now()
-  updated_by: uuid
+  referring_faskes:
+    type: text
+    comment: faskes perujuk
 relations:
-  client:
-    type: belongs_to
-    from: id_client
-    to: client.id
-  patient:
-    type: belongs_to
-    from: id_patient
-    to: patient.id
-  doctor:
-    type: belongs_to
-    from: id_doctor
-    to: staff.id
-  poli:
-    type: belongs_to
-    from: id_poli
-    to: poli.id
   encounter:
     type: has_many
     from: id
     to: encounter.id_patient_queue
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
+  doctor:
+    type: belongs_to
+    from: id_doctor
+    to: staff.id
+  patient:
+    type: belongs_to
+    from: id_patient
+    to: patient.id
+  poli:
+    type: belongs_to
+    from: id_poli
+    to: poli.id

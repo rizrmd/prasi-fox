@@ -3,20 +3,27 @@ columns:
   id:
     type: uuid
     primary: true
-  code: text
-  name: text
+    required: true
+  code:
+    type: text
+    required: true
+  name:
+    type: text
+    required: true
   version: text
-  created_date: datetime
+  created_date:
+    type: datetime
+    required: true
   updated_date: datetime
   deleted_at: datetime
   created_by: uuid
   updated_by: uuid
 relations:
-  client:
-    type: belongs_to
-    from: id_client
-    to: client.id
   emr_diagnosis_treatment:
     type: has_many
     from: id
     to: emr_diagnosis_treatment.id_diagnosis
+  client:
+    type: belongs_to
+    from: id_client
+    to: client.id
