@@ -1,0 +1,18 @@
+title: Patient room
+record_title: [patient_name, contact_name]
+labels:
+  patient_name: [1, Patient Name]
+  contact_name: [2, Contact Name]
+  phone_number: [3, Phone Number]
+  admission_date: [4, Admission Date]
+  referral_letter_number: [5, Referral Letter Number]
+  referring_physician: [6, Referring Physician]
+  room_name: [7, Room Name]
+  doctor_name: [8, Doctor Name]
+  created_date: [9, Created Date]
+  admission_reason: [10, Admission Reason]
+  updated_date: [11, Updated Date]
+  client: [12, Client]
+  patient: [13, Patient]
+  doctor: [14, Doctor]
+  room: [15, Room]

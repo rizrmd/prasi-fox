@@ -212,6 +212,7 @@ export async function modelPull() {
     for (const [tableName, model] of tableMap.entries()) {
       const modelDir = join(modelsDir, tableName);
       const modelPath = join(modelDir, "model.yml");
+      const labelPath = join(modelDir, "label.yml");
 
       // Create directory if it doesn't exist
       await mkdir(modelDir, { recursive: true });
@@ -224,6 +225,148 @@ export async function modelPull() {
         })
       );
       console.log(`✅ Generated model for: ${tableName}`);
+      
+      // Define fields to exclude from various sections
+      const excludeFromRecordTitle = ['id', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at'];
+      const excludeFromLabels = ['id', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at'];
+      
+      // Generate label data
+      const labelData: {
+        title: string;
+        record_title: string[];
+        labels: Record<string, (string | number)[]>;
+      } = {
+        title: tableName.charAt(0).toUpperCase() + tableName.slice(1).replace(/_/g, ' '),
+        // Ensure record_title never includes 'id'
+        record_title: Object.keys(model.columns)
+          .filter(col => {
+            // Never include id and other excluded fields
+            if (col === 'id' || excludeFromRecordTitle.includes(col)) {
+              return false;
+            }
+            
+            // Check if the column type is text or uuid
+            return typeof model.columns[col] === 'string' ? 
+              ['text', 'uuid'].includes(model.columns[col]) : 
+              ['text', 'uuid'].includes(model.columns[col].type);
+          })
+          .slice(0, 2),
+        labels: {}
+      };
+      
+      // If record_title is empty after filtering, add the first eligible field
+      if (labelData.record_title.length === 0) {
+        const firstEligibleField = Object.keys(model.columns)
+          .filter(col => {
+            // Never include id and other excluded fields
+            if (col === 'id' || excludeFromRecordTitle.includes(col)) {
+              return false;
+            }
+            
+            // Check if the column type is text or uuid
+            return typeof model.columns[col] === 'string' ? 
+              ['text', 'uuid'].includes(model.columns[col]) : 
+              ['text', 'uuid'].includes(model.columns[col].type);
+          })[0];
+          
+        if (firstEligibleField) {
+          labelData.record_title = [firstEligibleField];
+        }
+      }
+      
+      // Track the index for labels
+      let labelIndex = 1;
+      
+      // Create labels for columns with array values
+      Object.entries(model.columns)
+        .filter(([colName]) => !excludeFromLabels.includes(colName))
+        .forEach(([colName, colDef]) => {
+          const displayName = colName
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+            
+          // Check if field is required
+          let isRequired = false;
+          if (typeof colDef === 'object' && colDef !== null) {
+            isRequired = 'default' in colDef === false && !colName.startsWith('id_');
+          }
+          
+          // Add to labelData.labels
+          labelData.labels[colName] = isRequired ? 
+            [labelIndex, displayName, 'required'] : 
+            [labelIndex, displayName];
+            
+          labelIndex++;
+        });
+        
+      // Add relations to labels
+      if (model.relations) {
+        Object.entries(model.relations).forEach(([relationName, relationDef]) => {
+          // Format the display name for relation
+          const displayName = relationName
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+          
+          // Add the relation to labels
+          labelData.labels[relationName] = [labelIndex, displayName];
+          labelIndex++;
+        });
+      }
+      
+      // Convert to YAML
+      let yamlString = stringify(labelData, { indent: 2 });
+      
+      // Process the YAML string to convert block arrays to flow style (square brackets)
+      const lines = yamlString.split('\n');
+      let inArray = false;
+      let arrayIndent = 0;
+      let arrayKey = '';
+      let arrayItems: string[] = [];
+      
+      const outputLines: string[] = [];
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue; // Skip empty lines
+        
+        // Check if this line starts a new array
+        const arrayStart = line.match(/^(\s*)(\w+):\s*$/);
+        if (arrayStart && i + 1 < lines.length && lines[i + 1]?.trimStart().startsWith('- ')) {
+          // This is the start of an array
+          arrayKey = arrayStart[2] || '';
+          arrayIndent = (arrayStart[1] || '').length;
+          inArray = true;
+          arrayItems = [];
+          continue;
+        }
+        
+        // If we're in an array and this line is an array item
+        if (inArray && line.trimStart().startsWith('- ')) {
+          // Extract the item value
+          const itemValue = line.trimStart().substring(2);
+          arrayItems.push(itemValue);
+          
+          // Check if next line is not an array item or end of file
+          if (i + 1 >= lines.length || !lines[i + 1]?.trimStart().startsWith('- ')) {
+            // End of array, output with square brackets
+            const indent = ' '.repeat(arrayIndent);
+            outputLines.push(`${indent}${arrayKey}: [${arrayItems.join(', ')}]`);
+            inArray = false;
+          }
+          
+          continue;
+        }
+        
+        // Regular line, just output it
+        if (!inArray) {
+          outputLines.push(line);
+        }
+      }
+      
+      await writeFile(labelPath, outputLines.join('\n'));
+      console.log(`✅ Generated label for: ${tableName}`);
     }
 
     console.log("\n✅ Successfully pulled database schema");

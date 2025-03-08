@@ -1,0 +1,13 @@
+title: Schedule doctor
+record_title: [doctor_name, day]
+labels:
+  doctor_name: [1, Doctor Name]
+  created_date: [2, Created Date]
+  updated_date: [3, Updated Date]
+  day: [4, Day]
+  start_time: [5, Start Time]
+  end_time: [6, End Time]
+  client: [7, Client]
+  staff_role: [8, Staff Role]
+  staff: [9, Staff]
+  poli: [10, Poli]

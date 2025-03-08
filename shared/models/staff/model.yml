@@ -29,14 +29,6 @@ relations:
     type: belongs_to
     from: id_client
     to: client.id
-  prescriptions_queue:
-    type: has_many
-    from: id
-    to: prescriptions_queue.id_staff
-  prescriptions:
-    type: has_many
-    from: id
-    to: prescriptions.id_staff
   patient_queue:
     type: has_many
     from: id
@@ -45,6 +37,14 @@ relations:
     type: has_many
     from: id
     to: patient_room.id_doctor
+  prescriptions_queue:
+    type: has_many
+    from: id
+    to: prescriptions_queue.id_staff
+  prescriptions:
+    type: has_many
+    from: id
+    to: prescriptions.id_staff
   emr:
     type: has_many
     from: id
@@ -53,27 +53,27 @@ relations:
     type: belongs_to
     from: id_staff_role
     to: staff_role.id
-  user:
-    type: has_many
-    from: id
-    to: user.id_staff
   encounter:
     type: has_many
     from: id
     to: encounter.id_staff
-  schedule_poli:
-    type: has_many
-    from: id
-    to: schedule_poli.id_staff
   schedule_doctor:
     type: has_many
     from: id
     to: schedule_doctor.id_staff
-  invoice:
-    type: has_many
-    from: id
-    to: invoice.id_staff
   staff_log:
     type: has_many
     from: id
     to: staff_log.id_staff
+  user:
+    type: has_many
+    from: id
+    to: user.id_staff
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_staff
+  schedule_poli:
+    type: has_many
+    from: id
+    to: schedule_poli.id_staff

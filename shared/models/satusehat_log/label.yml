@@ -1,0 +1,13 @@
+title: Satusehat log
+record_title: [endpoint, status]
+labels:
+  endpoint: [1, Endpoint]
+  request_body: [2, Request Body]
+  response_body: [3, Response Body]
+  status_code: [4, Status Code]
+  status: [5, Status]
+  error_message: [6, Error Message]
+  created_date: [7, Created Date]
+  resource_data: [8, Resource Data]
+  updated_date: [9, Updated Date]
+  client: [10, Client]

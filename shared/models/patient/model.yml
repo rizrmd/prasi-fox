@@ -26,43 +26,43 @@ relations:
     type: belongs_to
     from: id_client
     to: client.id
-  invoice_payment:
-    type: has_many
-    from: id
-    to: invoice_payment.id_patient
   encounter:
     type: has_many
     from: id
     to: encounter.id_patient
-  prescriptions_queue:
-    type: has_many
-    from: id
-    to: prescriptions_queue.id_patient
-  bpjs_log:
-    type: has_many
-    from: id
-    to: bpjs_log.id_patient
-  invoice:
-    type: has_many
-    from: id
-    to: invoice.id_patient
-  prescriptions:
-    type: has_many
-    from: id
-    to: prescriptions.id_patient
   patient_queue:
     type: has_many
     from: id
     to: patient_queue.id_patient
-  patient_room:
-    type: has_many
-    from: id
-    to: patient_room.id_patient
-  emr:
-    type: has_many
-    from: id
-    to: emr.id_patient
   invoice_claim:
     type: has_many
     from: id
     to: invoice_claim.id_patient
+  patient_room:
+    type: has_many
+    from: id
+    to: patient_room.id_patient
+  prescriptions_queue:
+    type: has_many
+    from: id
+    to: prescriptions_queue.id_patient
+  invoice:
+    type: has_many
+    from: id
+    to: invoice.id_patient
+  invoice_payment:
+    type: has_many
+    from: id
+    to: invoice_payment.id_patient
+  prescriptions:
+    type: has_many
+    from: id
+    to: prescriptions.id_patient
+  emr:
+    type: has_many
+    from: id
+    to: emr.id_patient
+  bpjs_log:
+    type: has_many
+    from: id
+    to: bpjs_log.id_patient

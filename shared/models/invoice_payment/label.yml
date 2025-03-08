@@ -1,0 +1,15 @@
+title: Invoice payment
+record_title: [patient_name, invoice_number]
+labels:
+  patient_name: [1, Patient Name]
+  invoice_number: [2, Invoice Number]
+  payment_date: [3, Payment Date]
+  payment_method: [4, Payment Method]
+  amount_paid: [5, Amount Paid]
+  reference_number: [6, Reference Number]
+  created_date: [7, Created Date]
+  status: [8, Status]
+  updated_date: [9, Updated Date]
+  client: [10, Client]
+  invoice: [11, Invoice]
+  patient: [12, Patient]

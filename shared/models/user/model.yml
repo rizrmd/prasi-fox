@@ -25,11 +25,11 @@ relations:
     type: belongs_to
     from: id_staff
     to: staff.id
-  session:
-    type: has_many
-    from: id
-    to: session.id_user
   user_menu:
     type: has_many
     from: id
     to: user_menu.id_user
+  session:
+    type: has_many
+    from: id
+    to: session.id_user

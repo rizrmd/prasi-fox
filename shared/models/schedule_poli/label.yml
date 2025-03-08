@@ -1,0 +1,12 @@
+title: Schedule poli
+record_title: [poli_name, day]
+labels:
+  poli_name: [1, Poli Name]
+  created_date: [2, Created Date]
+  day: [3, Day]
+  start_time: [4, Start Time]
+  end_time: [5, End Time]
+  updated_date: [6, Updated Date]
+  client: [7, Client]
+  staff: [8, Staff]
+  poli: [9, Poli]

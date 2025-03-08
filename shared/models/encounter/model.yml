@@ -28,10 +28,6 @@ relations:
     type: belongs_to
     from: id_staff
     to: staff.id
-  room:
-    type: belongs_to
-    from: id_room
-    to: room.id
   poli:
     type: belongs_to
     from: id_poli
@@ -44,6 +40,10 @@ relations:
     type: has_many
     from: id
     to: invoice.id_encounter
+  room:
+    type: belongs_to
+    from: id_room
+    to: room.id
   emr_patient:
     type: belongs_to
     from: id_emr_patient

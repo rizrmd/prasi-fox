@@ -18,10 +18,6 @@ relations:
     type: has_many
     from: id
     to: role_menu.id_staff_role
-  user:
-    type: has_many
-    from: id
-    to: user.id_staff_role
   schedule_doctor:
     type: has_many
     from: id
@@ -30,6 +26,10 @@ relations:
     type: has_many
     from: id
     to: staff_log.id_staff_role
+  user:
+    type: has_many
+    from: id
+    to: user.id_staff_role
   staff:
     type: has_many
     from: id

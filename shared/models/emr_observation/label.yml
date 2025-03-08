@@ -1,0 +1,15 @@
+title: Emr observation
+record_title: [heart_rate, breaths]
+labels:
+  heart_rate: [1, Heart Rate]
+  breaths: [2, Breaths]
+  blood_pressure: [3, Blood Pressure]
+  body_temperature: [4, Body Temperature]
+  responsiveness: [5, Responsiveness]
+  body_height: [6, Body Height]
+  body_weight: [7, Body Weight]
+  mental_status: [8, Mental Status]
+  created_date: [9, Created Date]
+  updated_date: [10, Updated Date]
+  client: [11, Client]
+  emr: [12, Emr]

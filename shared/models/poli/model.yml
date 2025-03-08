@@ -20,15 +20,15 @@ relations:
     type: has_many
     from: id
     to: encounter.id_poli
-  schedule_poli:
-    type: has_many
-    from: id
-    to: schedule_poli.id_poli
-  schedule_doctor:
-    type: has_many
-    from: id
-    to: schedule_doctor.id_poli
   patient_queue:
     type: has_many
     from: id
     to: patient_queue.id_poli
+  schedule_doctor:
+    type: has_many
+    from: id
+    to: schedule_doctor.id_poli
+  schedule_poli:
+    type: has_many
+    from: id
+    to: schedule_poli.id_poli

@@ -30,10 +30,10 @@ relations:
     type: belongs_to
     from: id_doctor
     to: staff.id
-  emr_observation:
+  emr_service_request:
     type: has_many
     from: id
-    to: emr_observation.id_emr
+    to: emr_service_request.id_emr
   emr_anamnesis:
     type: has_many
     from: id
@@ -42,10 +42,10 @@ relations:
     type: has_many
     from: id
     to: prescriptions.id_emr
-  emr_service_request:
+  emr_observation:
     type: has_many
     from: id
-    to: emr_service_request.id_emr
+    to: emr_observation.id_emr
   emr_diagnosis_treatment:
     type: has_many
     from: id

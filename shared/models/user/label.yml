@@ -1,0 +1,14 @@
+title: User
+record_title: [display_name, email]
+labels:
+  display_name: [1, Display Name]
+  email: [2, Email]
+  password: [3, Password]
+  username: [4, Username]
+  created_date: [5, Created Date]
+  updated_date: [6, Updated Date]
+  client: [7, Client]
+  staff_role: [8, Staff Role]
+  staff: [9, Staff]
+  user_menu: [10, User Menu]
+  session: [11, Session]

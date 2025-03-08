@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["title", "record_title", "labels"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The title of the record type"
+    },
+    "record_title": {
+      "type": "array",
+      "description": "Fields to use for displaying the record title",
+      "items": {
+        "type": "string"
+      }
+    },
+    "labels": {
+      "type": "object",
+      "description": "Map of field names to their label configurations",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+          {
+            "type": "integer",
+            "description": "The numeric ID for the field"
+          },
+          {
+            "type": "string",
+            "description": "The display label for the field"
+          }
+        ]
+      }
+    }
+  }
+}

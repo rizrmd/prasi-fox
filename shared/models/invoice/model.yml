@@ -20,14 +20,6 @@ relations:
     type: belongs_to
     from: id_client
     to: client.id
-  invoice_payment:
-    type: has_many
-    from: id
-    to: invoice_payment.id_invoice
-  bpjs_log:
-    type: has_many
-    from: id
-    to: bpjs_log.id_invoice
   invoice_claim:
     type: has_many
     from: id
@@ -36,6 +28,14 @@ relations:
     type: has_many
     from: id
     to: invoice_line.id_invoice
+  invoice_payment:
+    type: has_many
+    from: id
+    to: invoice_payment.id_invoice
+  bpjs_log:
+    type: has_many
+    from: id
+    to: bpjs_log.id_invoice
   patient:
     type: belongs_to
     from: id_patient

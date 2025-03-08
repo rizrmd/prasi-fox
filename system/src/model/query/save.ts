@@ -87,11 +87,6 @@ const saveRecord = async ({
   debug,
   client,
 }: SaveOptions): Promise<Record<string, any>> => {
-  // Check if model and model.columns exist
-  if (!model || !model.columns) {
-    throw new Error(`Invalid model or model.columns is undefined`);
-  }
-  
   const columns = Object.keys(data).filter((key) =>
     Object.keys(model.columns).includes(key)
   );

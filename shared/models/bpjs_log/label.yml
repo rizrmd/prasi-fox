@@ -1,0 +1,14 @@
+title: Bpjs log
+record_title: [patient_name, bpjs_number]
+labels:
+  patient_name: [1, Patient Name]
+  bpjs_number: [2, Bpjs Number]
+  transaction_date: [3, Transaction Date]
+  claim_amount: [4, Claim Amount]
+  claim_status: [5, Claim Status]
+  notes: [6, Notes]
+  created_date: [7, Created Date]
+  updated_date: [8, Updated Date]
+  client: [9, Client]
+  invoice: [10, Invoice]
+  patient: [11, Patient]

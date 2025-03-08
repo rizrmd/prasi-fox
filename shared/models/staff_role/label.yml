@@ -1,0 +1,12 @@
+title: Staff role
+record_title: [name]
+labels:
+  name: [1, Name]
+  created_date: [2, Created Date]
+  updated_date: [3, Updated Date]
+  client: [4, Client]
+  role_menu: [5, Role Menu]
+  schedule_doctor: [6, Schedule Doctor]
+  staff_log: [7, Staff Log]
+  user: [8, User]
+  staff: [9, Staff]

@@ -1,0 +1,14 @@
+title: Emr service request
+record_title: [service_request_type, service_request_description]
+labels:
+  service_request_type: [1, Service Request Type]
+  service_request_description: [2, Service Request Description]
+  referral_destination: [3, Referral Destination]
+  referral_poli: [4, Referral Poli]
+  referral_doctor: [5, Referral Doctor]
+  request_date: [6, Request Date]
+  condition_patient: [7, Condition Patient]
+  created_date: [8, Created Date]
+  updated_date: [9, Updated Date]
+  client: [10, Client]
+  emr: [11, Emr]

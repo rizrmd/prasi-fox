@@ -25,11 +25,11 @@ relations:
     type: belongs_to
     from: id_client
     to: client.id
-  role_menu:
-    type: has_many
-    from: id
-    to: role_menu.id_menu
   user_menu:
     type: has_many
     from: id
     to: user_menu.id_menu
+  role_menu:
+    type: has_many
+    from: id
+    to: role_menu.id_menu
