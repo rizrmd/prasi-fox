@@ -1,4 +1,4 @@
-import { Auth } from "system/config/auth";
+import { authBackend } from "system/auth/backend";
 import { serveApiRoutes } from "./api/serve";
 import { g } from "./parts/global";
 
@@ -12,7 +12,7 @@ export async function startServer(
 ) {
   const { port, hostname } = options;
 
-  Auth.init();
+  authBackend.init();
 
   const routes = serveApiRoutes();
   g.server = Bun.serve({

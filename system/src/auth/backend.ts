@@ -4,6 +4,7 @@ import { join } from "path";
 import { models } from "shared/generated/models";
 import { modelInstance, type ModelInstance } from "system/model/instance";
 import type { ModelBase } from "system/model/base";
+
 // Define types for auth.yaml structure
 export interface AuthYamlConfig {
   enabled: boolean;
@@ -45,7 +46,7 @@ export interface AuthYamlConfig {
   };
 }
 
-export const Auth = {
+export const authBackend = {
   status: "init" as "init" | "loaded",
   config: null as unknown as AuthYamlConfig,
 

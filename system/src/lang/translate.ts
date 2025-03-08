@@ -1,5 +1,6 @@
 import { startCase, toLower } from "lodash";
 import id from "./id";
+
 export const translate = (
   msg: keyof typeof id,
   opt?: { params: Record<string, any>; capitalizedParams?: boolean }

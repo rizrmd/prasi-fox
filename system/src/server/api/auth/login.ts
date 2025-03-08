@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { Auth } from "system/config/auth";
+import { authBackend } from "system/auth/backend";
 import { translate } from "system/lang/translate";
 import { apiContext, defineAPI } from "system/server/parts/api";
 
@@ -20,7 +20,7 @@ export default defineAPI({
     const { username, password } = opt;
     const { req, ip } = apiContext(this);
 
-    const mapping = Auth.config.mapping.user.fields;
+    const mapping = authBackend.config.mapping.user.fields;
     if (!username || !password) {
       return {
         error: translate("auth_missing_fields", {
@@ -33,11 +33,11 @@ export default defineAPI({
     try {
       const fields = Object.values(mapping);
 
-      const user = await Auth.model.user.findFirst({
+      const user = await authBackend.model.user.findFirst({
         fields: [
-          Auth.model.user.primaryKey,
+          authBackend.model.user.primaryKey,
           ...fields,
-          [Auth.modelName.role, "name"],
+          [authBackend.modelName.role, "name"],
         ],
         where: [
           {
@@ -50,7 +50,7 @@ export default defineAPI({
 
       if (user) {
         if (verifyPassword(password, user.password)) {
-          const session = await Auth.model.session.save({
+          const session = await authBackend.model.session.save({
             user_id: user.id,
             status: "active",
           });
