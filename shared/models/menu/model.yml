@@ -17,6 +17,14 @@ columns:
   update_at: datetime
   deleted_at: datetime
   description: text
+  created_date:
+    type: datetime
+    default: now()
+  created_by: uuid
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

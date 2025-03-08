@@ -55,6 +55,10 @@ columns:
   referring_faskes:
     type: text
     comment: faskes perujuk
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   encounter:
     type: has_many

@@ -114,23 +114,31 @@ async function fetchTablesAndColumns(): Promise<TableColumn[]> {
     const tablesAndColumns = await sql`
       WITH pk_columns AS (
         SELECT 
-          tc.table_name,
-          kcu.column_name
-        FROM information_schema.table_constraints tc
-        JOIN information_schema.key_column_usage kcu 
-          ON tc.constraint_name = kcu.constraint_name
-          AND tc.table_schema = kcu.table_schema
-        WHERE tc.constraint_type = 'PRIMARY KEY'
-          AND tc.table_schema = 'public'
+          a.attrelid::regclass AS table_name,
+          a.attname AS column_name
+        FROM pg_index i
+        JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+        WHERE i.indisprimary
+      ),
+      column_comments AS (
+        SELECT 
+          c.table_name,
+          c.column_name,
+          pg_catalog.col_description(
+            ('"' || c.table_schema || '"."' || c.table_name || '"')::regclass, 
+            c.ordinal_position
+          ) as column_comment
+        FROM information_schema.columns c
+        WHERE c.table_schema = 'public'
       )
       SELECT 
-        t.table_name,
+        t.table_name, 
         c.column_name,
         c.data_type,
         c.column_default,
         c.is_nullable,
         tc.constraint_type,
-        col_description(t.table_name::regclass, c.ordinal_position) as column_comment,
+        cc.column_comment,
         CASE WHEN pk.column_name IS NOT NULL THEN true ELSE false END as is_primary
       FROM information_schema.tables t
       LEFT JOIN information_schema.columns c 
@@ -142,13 +150,12 @@ async function fetchTablesAndColumns(): Promise<TableColumn[]> {
       LEFT JOIN information_schema.table_constraints tc 
         ON tc.constraint_name = ccu.constraint_name
       LEFT JOIN pk_columns pk
-        ON t.table_name = pk.table_name AND c.column_name = pk.column_name
+        ON t.table_name::text = pk.table_name::text AND c.column_name = pk.column_name
+      LEFT JOIN column_comments cc
+        ON c.table_name = cc.table_name AND c.column_name = cc.column_name
       WHERE t.table_schema = 'public'
       ORDER BY t.table_name, c.ordinal_position;
     `;
-    console.log(
-      `Retrieved ${tablesAndColumns.length} rows for tables and columns`
-    );
     return tablesAndColumns as TableColumn[];
   } catch (error) {
     console.error("Failed to fetch tables and columns:", error);
@@ -157,126 +164,50 @@ async function fetchTablesAndColumns(): Promise<TableColumn[]> {
 }
 
 // Fetch foreign key relationships for tables
-async function fetchRelations(
-  tableNames: string[],
-  skipLargeTables: boolean,
-  totalTablesAndColumnsCount: number
-): Promise<TableRelation[]> {
-  // If we have fewer than 1000 rows for tables and columns, fetch all relationships at once
-  if (totalTablesAndColumnsCount < 1000) {
-    // console.log("Fetching all foreign key relationships at once (less than 1000 total rows)...");
-    
-    try {
-      // Format the table names as a PostgreSQL array
-      const tableNamesArray = `{${tableNames.map(name => `"${name}"`).join(',')}}`;
-      
-      // Fetch all foreign key relationships in a single query
-      const allRelations = await sql`
-        SELECT
-          tc.table_name,
-          kcu.column_name,
-          ccu.table_name AS foreign_table_name,
-          ccu.column_name AS foreign_column_name,
-          obj_description(pc.oid, 'pg_constraint') AS constraint_comment
-        FROM information_schema.table_constraints tc
-        JOIN information_schema.key_column_usage kcu 
-          ON tc.constraint_name = kcu.constraint_name
-          AND tc.table_schema = kcu.table_schema
-        JOIN information_schema.constraint_column_usage ccu 
-          ON ccu.constraint_name = tc.constraint_name
-        LEFT JOIN pg_constraint pc
-          ON pc.conname = tc.constraint_name
-        WHERE tc.constraint_type = 'FOREIGN KEY'
-          AND tc.table_schema = 'public'
-          AND (tc.table_name = ANY(${tableNamesArray}::text[]) OR ccu.table_name = ANY(${tableNamesArray}::text[]));
-      `;
-      
-      console.log(`Retrieved ${allRelations.length} rows for foreign key relationships`);
-      return allRelations as TableRelation[];
-    } catch (error) {
-      console.error("Failed to fetch relations:", error);
-      throw error;
-    }
-  }
-  
-  // Otherwise, fetch relationships table by table (original implementation)
-  console.log("Fetching foreign key relationships table by table...");
-  console.log(
-    `Max relations per table: ${CONFIG.MAX_RELATIONS_PER_TABLE}, Skip large tables: ${skipLargeTables}`
-  );
-
-  const relations: TableRelation[] = [];
-  let relationsProcessed = 0;
-  const skippedTables: string[] = [];
-
+async function fetchRelations(tableNames: string[]): Promise<TableRelation[]> {
   try {
-    for (const tableName of tableNames) {
-      // Get relationships where this table is either the source or target
-      const tableRelations = await sql`
-        SELECT
-          tc.table_name,
-          kcu.column_name,
-          ccu.table_name AS foreign_table_name,
-          ccu.column_name AS foreign_column_name,
-          obj_description(pc.oid, 'pg_constraint') AS constraint_comment
-        FROM information_schema.table_constraints tc
-        JOIN information_schema.key_column_usage kcu 
-          ON tc.constraint_name = kcu.constraint_name
-          AND tc.table_schema = kcu.table_schema
-        JOIN information_schema.constraint_column_usage ccu 
-          ON ccu.constraint_name = tc.constraint_name
-        LEFT JOIN pg_constraint pc
-          ON pc.conname = tc.constraint_name
-        WHERE tc.constraint_type = 'FOREIGN KEY'
-          AND tc.table_schema = 'public'
-          AND (tc.table_name = ${tableName} OR ccu.table_name = ${tableName})
-        LIMIT ${CONFIG.MAX_RELATIONS_PER_TABLE + 1};
-      `;
+    // Format the table names as a PostgreSQL array
+    const tableNamesArray = `${tableNames
+      .map((name) => `('${name})'`)
+      .join(",")}`;
 
-      // If we hit the limit and skip-large-tables is enabled, skip this table
-      if (
-        tableRelations.length > CONFIG.MAX_RELATIONS_PER_TABLE &&
-        skipLargeTables
-      ) {
-        console.log(
-          `⚠️ Skipping table ${tableName} (${tableRelations.length} relations exceeds limit ${CONFIG.MAX_RELATIONS_PER_TABLE})`
-        );
-        skippedTables.push(tableName);
-        continue;
-      }
-
-      // Only take up to MAX_RELATIONS_PER_TABLE
-      const relationsToAdd = tableRelations.slice(
-        0,
-        CONFIG.MAX_RELATIONS_PER_TABLE
-      );
-      relations.push(...(relationsToAdd as TableRelation[]));
-      relationsProcessed += relationsToAdd.length;
-
-      // Show progress for the first table, last table, and every 1000 relations
-      if (
-        tableName === tableNames[0] ||
-        tableName === tableNames[tableNames.length - 1] ||
-        relationsProcessed % 10 === 0
-      ) {
-        console.log(
-          `Progress: ${relations.length} relations processed (last table: ${tableName})`
-        );
-      }
-    }
-
-    if (skippedTables.length > 0) {
-      console.log(
-        `⚠️ Skipped ${
-          skippedTables.length
-        } tables with too many relations: ${skippedTables.join(", ")}`
-      );
-    }
+    // Fetch all foreign key relationships in a single query
+    const allRelations = await sql.unsafe(`
+-- This query uses system catalogs directly without information_schema
+SELECT
+    source_rel.relname AS table_name,
+    source_att.attname AS column_name,
+    target_rel.relname AS foreign_table_name,
+    target_att.attname AS foreign_column_name
+FROM
+    pg_constraint con
+JOIN
+    pg_class source_rel ON con.conrelid = source_rel.oid
+JOIN
+    pg_class target_rel ON con.confrelid = target_rel.oid
+JOIN
+    pg_attribute source_att ON 
+        source_att.attrelid = source_rel.oid AND
+        source_att.attnum = ANY(con.conkey)
+JOIN
+    pg_attribute target_att ON 
+        target_att.attrelid = target_rel.oid AND
+        target_att.attnum = ANY(con.confkey)
+JOIN
+    pg_namespace ns ON source_rel.relnamespace = ns.oid
+WHERE
+    con.contype = 'f' AND -- foreign key constraint
+    ns.nspname = 'public' AND -- public schema
+    array_position(con.conkey, source_att.attnum) = array_position(con.confkey, target_att.attnum)
+ORDER BY
+    source_rel.relname, source_att.attname;
+ `);
 
     console.log(
-      `Retrieved ${relations.length} rows for foreign key relationships`
+      `Retrieved ${allRelations.length} rows for foreign key relationships`
     );
-    return relations;
+
+    return allRelations as TableRelation[];
   } catch (error) {
     console.error("Failed to fetch relations:", error);
     throw error;
@@ -384,8 +315,6 @@ function processRelationships(
   relations: TableRelation[],
   tableMap: Map<string, TableModel>
 ): void {
-  console.log("Processing relationships...");
-
   for (const relation of relations) {
     const cleanTableName = relation.table_name.replace(/^[a-z]_/, "");
     const cleanForeignTableName = relation.foreign_table_name.replace(
@@ -438,7 +367,6 @@ function processRelationships(
 async function writeModelFiles(
   tableMap: Map<string, TableModel>
 ): Promise<void> {
-  console.log("Creating model files...");
   const modelsDir = join(process.cwd(), "shared/models");
 
   for (const [tableName, model] of tableMap.entries()) {
@@ -623,7 +551,11 @@ export async function modelPull() {
   }
 
   // Configuration options
-  const skipLargeTables = process.argv.includes("--skip-large-tables");
+  const dryRun = process.argv.includes("--dry-run");
+
+  if (dryRun) {
+    console.log("🔍 DRY RUN MODE: No files will be written");
+  }
 
   try {
     // Initialize database connection
@@ -639,7 +571,7 @@ export async function modelPull() {
     console.log(`Found ${tableNames.length} unique tables`);
 
     // Fetch foreign key relationships
-    const relations = await fetchRelations(tableNames, skipLargeTables, tablesAndColumns.length);
+    const relations = await fetchRelations(tableNames);
 
     // Process table columns into model structure
     const tableMap = processTableColumns(tablesAndColumns);
@@ -648,9 +580,18 @@ export async function modelPull() {
     processRelationships(relations, tableMap);
 
     // Write model files
-    await writeModelFiles(tableMap);
-
-    console.log("\n✅ Successfully pulled database schema");
+    if (!dryRun) {
+      await writeModelFiles(tableMap);
+      console.log("\n✅ Successfully pulled database schema");
+    } else {
+      console.log(
+        "\n✅ Dry run completed successfully. No files were written."
+      );
+      // Print a summary of what would have been created
+      console.log(
+        `Would have created ${tableMap.size} model files and their corresponding label files.`
+      );
+    }
   } catch (error) {
     console.error("Failed to pull database schema:", error);
     process.exit(1);

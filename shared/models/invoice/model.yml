@@ -25,6 +25,10 @@ columns:
     required: true
   created_by: uuid
   deleted_at: datetime
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   bpjs_log:
     type: has_many

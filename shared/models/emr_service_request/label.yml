@@ -9,5 +9,6 @@ labels:
   request_date: [6, Request Date]
   condition_patient: [7, Condition Patient, required]
   created_date: [8, Created Date, required]
-  client: [9, Client]
-  emr: [10, Emr]
+  updated_date: [9, Updated Date]
+  client: [10, Client]
+  emr: [11, Emr]

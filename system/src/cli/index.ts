@@ -26,16 +26,17 @@ if (command === "push") {
       process.exit(1);
     });
 } else {
-  console.error(`Available commands:
-  bun run model push     - Push model definitions to the database
-    Options:
-      --skip-relations   - Skip creating foreign key constraints
+  console.log(`\
+Available commands:
+
+  bun model push           Push model definitions to the database
+      --skip-relations     Skip creating foreign key constraints
+      --dry-run            Dry run the command
   
-  bun run model pull     - Pull model definitions from the database
-    Options:
-      --skip-large-tables - Skip tables with many columns
-  
-  bun run model generate - Generate TypeScript types from model definitions
+  bun model pull           Pull model definitions from the database
+      --dry-run            Dry run the command
+
+  bun model generate       Generate TypeScript types from model definitions
   `);
-  process.exit(1);
+  process.exit(0);
 }

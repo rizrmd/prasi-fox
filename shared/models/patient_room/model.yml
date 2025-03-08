@@ -31,6 +31,10 @@ columns:
     type: text
     required: true
     comment: direct/followup
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

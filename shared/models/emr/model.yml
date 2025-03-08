@@ -28,6 +28,10 @@ columns:
   created_by: uuid
   deleted_at: datetime
   id_encounter: uuid
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

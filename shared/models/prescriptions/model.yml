@@ -28,6 +28,10 @@ columns:
     type: text
     required: true
     comment: jumlah obat
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   invoice:
     type: has_many

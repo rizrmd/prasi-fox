@@ -272,6 +272,12 @@ export async function modelPush() {
 
   // Check if --skip-relations flag is present
   const skipRelations = process.argv.includes("--skip-relations");
+  // Check if --dry-run flag is present
+  const dryRun = process.argv.includes("--dry-run");
+
+  if (dryRun) {
+    console.log("🔍 DRY RUN MODE: No database changes will be made");
+  }
 
   const url = new URL(connectionString);
   url.searchParams.set("sslmode", "prefer");
@@ -311,29 +317,38 @@ export async function modelPush() {
     if (existingTables.length > 0) {
       console.warn(`⚠️ WARNING: ${existingTables.length} existing tables found. Dropping tables will result in DATA LOSS!`);
       
-      // Ask for confirmation
-      const rl = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-      
-      const confirmation = await new Promise<string>((resolve) => {
-        rl.question('Are you sure you want to continue? This will DELETE ALL DATA. Type "y" to continue: ', (answer: string) => {
-          resolve(answer);
-          rl.close();
+      // Skip confirmation in dry run mode
+      if (!dryRun) {
+        // Ask for confirmation
+        const rl = require('readline').createInterface({
+          input: process.stdin,
+          output: process.stdout
         });
-      });
-      
-      if (confirmation.toLowerCase() !== 'y' && confirmation.toLowerCase() !== 'yes') {
-        console.log('Operation cancelled.');
-        process.exit(0);
+        
+        const confirmation = await new Promise<string>((resolve) => {
+          rl.question('Are you sure you want to continue? This will DELETE ALL DATA. Type "y" to continue: ', (answer: string) => {
+            resolve(answer);
+            rl.close();
+          });
+        });
+        
+        if (confirmation.toLowerCase() !== 'y' && confirmation.toLowerCase() !== 'yes') {
+          console.log('Operation cancelled.');
+          process.exit(0);
+        }
+      } else {
+        console.log("DRY RUN: Would normally ask for confirmation to delete existing tables");
       }
     }
 
-    console.log("🗑️  Dropping existing tables...");
-    await dropAllTables();
+    if (dryRun) {
+      console.log("🗑️  DRY RUN: Would drop existing tables...");
+    } else {
+      console.log("🗑️  Dropping existing tables...");
+      await dropAllTables();
+    }
 
-    console.log(`📚 Creating ${sortedModels.length} model(s)`);
+    console.log(`📚 ${dryRun ? "Would create" : "Creating"} ${sortedModels.length} model(s)`);
 
     let updates = 0;
     const processedTables = new Set<string>();
@@ -345,12 +360,42 @@ export async function modelPush() {
     }
 
     // First create all tables with their columns (no foreign keys yet)
-    console.log("📊 Phase 1: Creating tables without foreign key constraints...");
-    await sql.begin(async (tx) => {
+    console.log(`📊 Phase 1: ${dryRun ? "Would create" : "Creating"} tables without foreign key constraints...`);
+    
+    if (!dryRun) {
+      await sql.begin(async (tx) => {
+        for (const [tableName, model] of sortedModels) {
+          // Skip if we've already processed this table
+          if (processedTables.has(tableName)) {
+            console.log(`⏭️  Skipping duplicate table: ${tableName}`);
+            continue;
+          }
+          
+          // Create table with columns but without foreign key constraints
+          const createTableSQL = generateUpdateSQL(
+            model,
+            tableNameMap,
+            allModels
+          );
+          if (createTableSQL) {
+            try {
+              console.log(`📝 Creating table: ${tableName}`);
+              await tx.unsafe(createTableSQL);
+              processedTables.add(tableName);
+              updates++;
+            } catch (error) {
+              console.error(`❌ Error creating table ${tableName}:`, error);
+              throw error; // Re-throw to trigger transaction rollback
+            }
+          }
+        }
+      });
+    } else {
+      // In dry run mode, just show what would be done
       for (const [tableName, model] of sortedModels) {
         // Skip if we've already processed this table
         if (processedTables.has(tableName)) {
-          console.log(`⏭️  Skipping duplicate table: ${tableName}`);
+          console.log(`⏭️  Would skip duplicate table: ${tableName}`);
           continue;
         }
         
@@ -361,23 +406,59 @@ export async function modelPush() {
           allModels
         );
         if (createTableSQL) {
-          try {
-            console.log(`📝 Creating table: ${tableName}`);
-            await tx.unsafe(createTableSQL);
-            processedTables.add(tableName);
-            updates++;
-          } catch (error) {
-            console.error(`❌ Error creating table ${tableName}:`, error);
-            throw error; // Re-throw to trigger transaction rollback
-          }
+          console.log(`📝 Would create table: ${tableName}`);
+          console.log(`SQL that would be executed:\n${createTableSQL}`);
+          processedTables.add(tableName);
+          updates++;
         }
       }
-    });
+    }
 
     // Then add all foreign key constraints unless --skip-relations flag is set
     if (!skipRelations) {
-      console.log("🔗 Phase 2: Adding foreign key constraints...");
-      await sql.begin(async (tx) => {
+      console.log(`🔗 Phase 2: ${dryRun ? "Would add" : "Adding"} foreign key constraints...`);
+      
+      if (!dryRun) {
+        await sql.begin(async (tx) => {
+          for (const [tableName, model] of sortedModels) {
+            if (model.relations) {
+              for (const [relationName, rel] of Object.entries(model.relations)) {
+                if (rel.type === "belongs_to") {
+                  const [refTable, refColumn] = rel.to.split(".");
+                  if (refTable && refColumn) {
+                    // Use the actual table name from our map
+                    const actualRefTable = tableNameMap.get(refTable);
+                    if (!actualRefTable) {
+                      console.warn(
+                        `⚠️ Could not find actual table name for ${refTable}, skipping relation`
+                      );
+                      continue;
+                    }
+
+                    const constraintName = `fk_${rel.from}_${refTable}`;
+                    let sqlQuery = `ALTER TABLE ${model.table} ADD CONSTRAINT ${constraintName} FOREIGN KEY (${rel.from}) REFERENCES ${actualRefTable}(${refColumn});`;
+                    
+                    // // Add comment to constraint if specified
+                    // if (rel.comment) {
+                    //   sqlQuery += `\nCOMMENT ON CONSTRAINT ${constraintName} ON ${model.table} IS '${rel.comment}';`;
+                    // }
+                    
+                    try {
+                      console.log(`🔗 Adding relation: ${tableName}.${relationName} -> ${refTable}`);
+                      await tx.unsafe(sqlQuery);
+                      updates++;
+                    } catch (error) {
+                      console.error(`❌ Error adding relation ${tableName}.${relationName} -> ${refTable}:`, error);
+                      throw error; // Re-throw to trigger transaction rollback
+                    }
+                  }
+                }
+              }
+            }
+          }
+        });
+      } else {
+        // In dry run mode, just show what would be done
         for (const [tableName, model] of sortedModels) {
           if (model.relations) {
             for (const [relationName, rel] of Object.entries(model.relations)) {
@@ -388,7 +469,7 @@ export async function modelPush() {
                   const actualRefTable = tableNameMap.get(refTable);
                   if (!actualRefTable) {
                     console.warn(
-                      `⚠️ Could not find actual table name for ${refTable}, skipping relation`
+                      `⚠️ Could not find actual table name for ${refTable}, would skip relation`
                     );
                     continue;
                   }
@@ -396,35 +477,24 @@ export async function modelPush() {
                   const constraintName = `fk_${rel.from}_${refTable}`;
                   let sqlQuery = `ALTER TABLE ${model.table} ADD CONSTRAINT ${constraintName} FOREIGN KEY (${rel.from}) REFERENCES ${actualRefTable}(${refColumn});`;
                   
-                  // Add comment to constraint if specified
-                  if (rel.comment) {
-                    sqlQuery += `\nCOMMENT ON CONSTRAINT ${constraintName} ON ${model.table} IS '${rel.comment}';`;
-                  }
-                  
-                  try {
-                    console.log(`🔗 Adding relation: ${tableName}.${relationName} -> ${refTable}`);
-                    console.log(`🔧 SQL: ${sqlQuery}`);
-                    await tx.unsafe(sqlQuery);
-                    updates++;
-                  } catch (error) {
-                    console.error(`❌ Error adding relation ${tableName}.${relationName} -> ${refTable}:`, error);
-                    throw error; // Re-throw to trigger transaction rollback
-                  }
+                  console.log(`🔗 ${updates + 1} Would add relation: ${tableName}.${relationName} -> ${refTable}`);
+                  console.log(`🔧 SQL that would be executed: ${sqlQuery}`);
+                  updates++;
                 }
               }
             }
           }
         }
-      });
+      }
     } else {
-      console.log("🚫 Phase 2: Skipping foreign key constraints (--skip-relations flag set)");
+      console.log(`🚫 Phase 2: ${dryRun ? "Would skip" : "Skipping"} foreign key constraints (--skip-relations flag set)`);
     }
 
     console.log(
-      `\n✅ Successfully applied ${updates} schema update(s)${skipRelations ? ' (relations skipped)' : ' and constraints'}`
+      `\n✅ ${dryRun ? "Dry run completed. Would have applied" : "Successfully applied"} ${updates} schema update(s)${skipRelations ? ' (relations skipped)' : ' and constraints'}`
     );
   } catch (error) {
-    console.error("Failed to update database schema:", error);
+    console.error(`Failed to ${dryRun ? "simulate" : "update"} database schema:`, error);
     process.exit(1);
   }
 }

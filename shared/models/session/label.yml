@@ -4,4 +4,6 @@ labels:
   status: [1, Status]
   expired_at: [2, Expired At]
   device_uuid: [3, Device Uuid, required]
-  user: [4, User]
+  created_date: [4, Created Date]
+  updated_date: [5, Updated Date]
+  user: [6, User]

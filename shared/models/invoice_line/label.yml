@@ -10,5 +10,6 @@ labels:
   id_treatment: [7, Id Treatment]
   medicine_name: [8, Medicine Name]
   id_medicine: [9, Id Medicine]
-  client: [10, Client]
-  invoice: [11, Invoice]
+  updated_date: [10, Updated Date]
+  client: [11, Client]
+  invoice: [12, Invoice]

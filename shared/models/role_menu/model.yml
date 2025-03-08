@@ -10,6 +10,8 @@ columns:
   created_date: datetime
   updated_date: datetime
   deleted_at: datetime
+  created_by: uuid
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

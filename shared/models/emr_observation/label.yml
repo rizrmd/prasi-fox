@@ -10,5 +10,6 @@ labels:
   body_weight: [7, Body Weight, required]
   mental_status: [8, Mental Status, required]
   created_date: [9, Created Date, required]
-  client: [10, Client]
-  emr: [11, Emr]
+  updated_date: [10, Updated Date]
+  client: [11, Client]
+  emr: [12, Emr]

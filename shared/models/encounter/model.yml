@@ -24,6 +24,10 @@ columns:
     type: text
     required: true
     comment: planned/arrived/triaged/in-progress/onleave/finished/cancelled
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

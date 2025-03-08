@@ -27,6 +27,10 @@ columns:
     type: datetime
     required: true
   deleted_at: datetime
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

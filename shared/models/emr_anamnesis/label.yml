@@ -8,5 +8,6 @@ labels:
   medication_statement: [5, Medication Statement, required]
   created_date: [6, Created Date, required]
   deleted_date: [7, Deleted Date]
-  client: [8, Client]
-  emr: [9, Emr]
+  updated_date: [8, Updated Date]
+  client: [9, Client]
+  emr: [10, Emr]

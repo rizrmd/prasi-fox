@@ -28,6 +28,10 @@ columns:
     type: json
     required: true
     default: "{}"
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   client:
     type: belongs_to

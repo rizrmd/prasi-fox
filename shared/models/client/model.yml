@@ -8,6 +8,14 @@ columns:
   satusehat_id: text
   deleted_at: datetime
   config: json
+  created_date:
+    type: datetime
+    default: now()
+  created_by: uuid
+  updated_date:
+    type: datetime
+    default: now()
+  updated_by: uuid
 relations:
   emr:
     type: has_many
