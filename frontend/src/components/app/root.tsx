@@ -15,11 +15,6 @@ function AppContent() {
   }
 
   if (currentPath.startsWith("/auth")) {
-    if (auth.status === "logged-in") {
-      navigate("/");
-      return <AppLoading />;
-    }
-
     return (
       <>
         {Page ? (

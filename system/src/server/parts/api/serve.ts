@@ -55,7 +55,7 @@ export const serveApiRoutes = () => {
 
       // If the handler returned headers, add them to the response
       if (headers) {
-        const headerEntries = Object.entries(result.headers);
+        const headerEntries = Object.entries(headers);
         for (const [key, value] of headerEntries) {
           response.headers.set(key, value as string);
         }

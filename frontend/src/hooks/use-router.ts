@@ -4,6 +4,7 @@ import {
   basePath,
   buildPath,
   matchRoute,
+  navigate,
   ParamsContext,
   parsePattern,
   type Params,
@@ -33,6 +34,7 @@ export function useRoot() {
     const handlePathChange = () => {
       router.currentPath = window.location.pathname;
       router.currentFullPath = window.location.pathname + window.location.hash;
+      setTimeout(local.render);
     };
 
     window.addEventListener("popstate", handlePathChange);
@@ -109,12 +111,6 @@ export function useRoot() {
 
     loadPage();
   }, [router.currentPath]);
-
-  const navigate = (to: string) => {
-    const fullPath = buildPath(to);
-    window.history.pushState({}, "", fullPath);
-    window.dispatchEvent(new PopStateEvent("popstate"));
-  };
 
   return {
     Page: local.Page ? local.Page : null,

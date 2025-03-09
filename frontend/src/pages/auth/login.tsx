@@ -24,8 +24,8 @@ function LoginPageContent() {
     try {
       const res = await action.login({ username, password });
       console.log(res);
-      // const redirectPath = getStoredRedirectPath();
-      // window.location.href = redirectPath || "/";
+      const redirectPath = getStoredRedirectPath();
+      window.location.href = redirectPath || "/";
     } catch (err: any) {
       setError(err.message);
     } finally {

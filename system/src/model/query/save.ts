@@ -90,6 +90,19 @@ const saveRecord = async ({
     Object.keys(model.columns).includes(key)
   );
 
+  // Check if any columns are from belongsTo relations
+  if (model.relations) {
+    Object.entries(model.relations).forEach(([relationName, relationConfig]) => {
+      if (relationConfig.type === 'belongs_to' && relationConfig.from) {
+        // Map the relation's "from" property to the appropriate column
+        const fromColumn = relationConfig.from;
+        if (data[fromColumn] !== undefined && !columns.includes(fromColumn)) {
+          columns.push(fromColumn);
+        }
+      }
+    });
+  }
+
   // Get primary key columns using utility function
   const pkColumns = getPrimaryKeyColumns(model);
 

@@ -36,7 +36,9 @@ const authProxy = proxy({
       const res = await api.authLogin(opt);
       return res;
     },
-    logout() {},
+    async logout() {
+      await api.authLogout();
+    },
     async register(opt: {}) {},
   }),
 });
