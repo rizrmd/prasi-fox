@@ -5,20 +5,19 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useValtioTab } from "@/hooks/use-valtio-tab";
 import { Link } from "@/lib/router";
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 import { useSnapshot } from "valtio";
 
 export const ModelBreadList: FC<{}> = ({}) => {
   const { state } = useValtioTab();
   const reader = useSnapshot(state);
-  const nav = reader.nav;
-  const name = nav.modelName.toLowerCase();
+  const modelName = reader.nav.modelName;
   return (
     <Breadcrumb className="p-2 bg-transparent select-none">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <Link to={`/model/${name}`} className="hover:underline">
-            {nav.modelName}
+          <Link to={`/model/${modelName}`} className="hover:underline">
+            {reader.model?.label.title || modelName}
           </Link>
         </BreadcrumbItem>
         {/* {state.breads.list.map((bread, index) => (

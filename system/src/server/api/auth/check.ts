@@ -3,7 +3,6 @@ import { apiContext, defineAPI } from "system/server/parts/api/define";
 
 export default defineAPI({
   path: "/api/auth/check",
-  msgpack: false,
   handler: async function () {
     const { req } = apiContext(this);
     const cookies = req.headers.get("Cookie") ?? "";

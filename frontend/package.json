@@ -39,6 +39,7 @@
     "derive-valtio": "^0.2.0",
     "goober": "^2.1.16",
     "hasha": "^6.0.0",
+    "lodash": "^4.17.21",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.475.0",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@shadcn/ui": "^0.0.4",
     "@types/bun": "latest",
+    "@types/lodash": "^4.17.16",
     "@types/lodash.get": "^4.4.9",
     "@types/lodash.set": "^4.3.9",
     "@types/node": "^22.13.10",

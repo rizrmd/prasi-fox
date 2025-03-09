@@ -12,7 +12,7 @@ export const ModelNavTabs: FC<{}> = ({}) => {
   const tabs = Object.values(nav.state.tabs)
     .map((e) => e.ui)
     .sort((a, b) => a.index - b.index);
-  const activeIndex = tabs.findIndex((e) => e.id === nav.state.active);
+  const activeIndex = nav.state.active.index;
 
   return (
     <div className="flex relative items-stretch flex-col overflow-hidden">
@@ -48,7 +48,7 @@ export const ModelNavTabs: FC<{}> = ({}) => {
         onTabChange={(index) => {
           const tab = tabs[index]!;
 
-          write.state.active = tab.id;
+          write.state.active = { id: tab.id, index };
           navigate(tabs[index]!.url);
         }}
         onTabClose={(tabId) => {
@@ -58,7 +58,7 @@ export const ModelNavTabs: FC<{}> = ({}) => {
             if (tabs.length === 0) {
               navigate("/");
             } else if (tabIndex <= activeIndex) {
-              navigate(nav.state.tabs[nav.state.active]!.ui.url);
+              navigate(nav.state.tabs[nav.state.active.id]!.ui.url);
             }
           }
         }}
