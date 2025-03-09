@@ -64,8 +64,10 @@ export const useValtioTab = (opt?: { root: true }) => {
       const model = models[params.name as keyof typeof models];
       if (model) {
         tab.model = ref(model);
-        tab.instance = ref(modelClient(model));
-        tab.instance.findFirst();
+        tab.instance = ref(modelClient(model, params.name as string));
+        tab.instance.findFirst().then((res) => {
+          console.log(res);
+        });
       } else {
         console.warn(`Model ${params.name} not found`);
       }

@@ -27,7 +27,10 @@ export type ModelInstance<T extends ModelBase> = {
 };
 
 export type ModelClient = ReturnType<typeof modelClient>;
-export const modelClient = <T extends ModelBase>(model: T) => {
+export const modelClient = <T extends ModelBase>(
+  model: T,
+  modelName: string
+) => {
   const primaryKeys: string[] = Object.entries(model.columns)
     .filter(([k, column]) => column.primary)
     .map(([k, column]) => k);
@@ -37,17 +40,16 @@ export const modelClient = <T extends ModelBase>(model: T) => {
     primaryKey: primaryKeys[0],
     primaryKeys,
     async findFirst(options: PartialFindFirstOptions = {}) {
-      console.log(options)
-      return api.model({ method: "findFirst", options });
+      return api.model({ method: "findFirst", modelName, options });
     },
     async findMany(options: PartialFindManyOptions = {}) {
-      return api.model({ method: "findFirst", options });
+      return api.model({ method: "findFirst", modelName, options });
     },
     async findList(options: PartialFindListOptions = {}) {
-      return api.model({ method: "findList", options });
+      return api.model({ method: "findList", modelName, options });
     },
     async save(options: SaveOptions) {
-      return api.model({ method: "save", options });
+      return api.model({ method: "save", modelName, options });
     },
   };
 };
