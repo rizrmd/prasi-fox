@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthRoute, getStoredRedirectPath } from "@/lib/auth";
-import { Link } from "@/lib/router";
+import { Link, navigate } from "@/lib/router";
 import { useState } from "react";
 
 import sideImage from "@/img/side-bg.jpeg";
@@ -30,7 +30,7 @@ function LoginPageContent() {
         return;
       }
       const redirectPath = getStoredRedirectPath();
-      window.location.href = redirectPath || "/";
+      navigate(redirectPath || "/");
     } catch (err: any) {
       setIsLoading(false);
       setError(err.message);

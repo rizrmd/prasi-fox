@@ -6,16 +6,13 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "node_modules": true,
-    ".vscode": true,
-    "shared/package.json": true,
-    "bun.lock": true,
-    "system/src/config": true,
-    ".gitignore": true,
-    "package-lock.json": true
+    "shared/generated": true
   },
   "yaml.schemas": {
     "./system/docs/schema/model.json": "**/model.yml",
     "./system/docs/schema/label.json": "**/label.yml"
-  }
+  },
+  "hide-files.files": [
+    "shared/generated"
+  ]
 }

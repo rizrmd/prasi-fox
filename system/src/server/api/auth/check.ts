@@ -21,9 +21,7 @@ export default defineAPI({
 
     try {
       const userModel = authBackend.modelName.user;
-      const roleModel = authBackend.modelName.role;
       const userMapping = authBackend.config.mapping.user.fields;
-      const roleMapping = authBackend.config.mapping.role.fields;
 
       const fields = Object.entries(userMapping)
         .filter(([k]) => {
@@ -37,14 +35,7 @@ export default defineAPI({
           { field: "id", operator: "=", value: sessionId },
           { field: "status", operator: "=", value: "active" },
         ],
-        fields: [
-          "id",
-          [
-            authBackend.modelName.user,
-            ...fields,
-            [authBackend.modelName.role, "id", "name"],
-          ],
-        ],
+        fields: ["id", [authBackend.modelName.user, ...fields]],
       });
 
       if (!session) {
@@ -57,13 +48,10 @@ export default defineAPI({
           id: userSession[userMapping.id],
           fullname: userSession[userMapping.fullname],
           username: userSession[userMapping.username],
+          role: userSession[userMapping.role],
         };
 
-        const role = {
-          id: userSession[roleModel][roleMapping.id],
-          name: userSession[roleModel][roleMapping.name],
-        };
-        return { user, role, session: { id: session.id } };
+        return { user, session: { id: session.id } };
       }
 
       return { error: `Session not found: ${sessionId}` };

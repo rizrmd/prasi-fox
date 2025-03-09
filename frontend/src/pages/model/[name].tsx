@@ -9,7 +9,6 @@ export default () => {
   const tab = useValtioTab({ root: true });
   const reader = useSnapshot(tab.state);
 
-
   if (!reader.list.ready) {
     tab.action.list.init(tab);
   }
