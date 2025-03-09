@@ -29,6 +29,9 @@ export default defineAPI({
       });
 
       if (session) {
+        await authBackend.model.session.save({
+          data: { id: sessionId, status: "inactive" },
+        });
         return {
           headers: {
             "Set-Cookie": `sessionId=; HttpOnly; Path=/; Max-Age=${
@@ -39,10 +42,6 @@ export default defineAPI({
           },
         };
       }
-
-      // await authBackend.model.session.save({
-      //   data: { id: sessionId, status: "inactive" },
-      // });
     } catch (error) {
       console.error("Session check error:", error);
       return { error: "Failed to verify session" };

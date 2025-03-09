@@ -8,6 +8,7 @@ import { useState } from "react";
 
 import sideImage from "@/img/side-bg.jpeg";
 import { useAuth } from "@/hooks/use-auth";
+import { Alert } from "@/components/ui/global-alert";
 
 function LoginPageContent() {
   const { state, action } = useAuth();
@@ -23,13 +24,16 @@ function LoginPageContent() {
 
     try {
       const res = await action.login({ username, password });
-      console.log(res);
+      if (res?.error) {
+        setIsLoading(false);
+        setError(res.error);
+        return;
+      }
       const redirectPath = getStoredRedirectPath();
       window.location.href = redirectPath || "/";
     } catch (err: any) {
-      setError(err.message);
-    } finally {
       setIsLoading(false);
+      setError(err.message);
     }
   };
 

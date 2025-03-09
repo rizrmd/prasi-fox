@@ -90,14 +90,13 @@ export default defineAPI({
             },
           };
         }
-      } else {
-        return {
-          error: translate("auth_failed_login", {
-            params: mapping,
-            capitalizedParams: true,
-          }),
-        };
       }
+      return {
+        error: translate("auth_failed_login", {
+          params: mapping,
+          capitalizedParams: true,
+        }),
+      };
     } catch (error) {
       console.log(error);
       return { error: translate("auth_failed") };

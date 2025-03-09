@@ -144,7 +144,7 @@ export function GlobalAlert() {
               </AlertDialogAction>
             </>
           ) : (
-            <AlertDialogAction onClick={snap.onConfirm}>OK</AlertDialogAction>
+            <AlertDialogAction onClick={snap.onConfirm} autoFocus>OK</AlertDialogAction>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>
