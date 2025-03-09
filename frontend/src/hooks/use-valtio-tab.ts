@@ -1,26 +1,49 @@
-import { proxy, ref, useSnapshot } from "valtio";
+import type { Tab } from "@/components/ext/draggable-tabs";
+import { proxy, ref } from "valtio";
 
-const tabs = proxy({
-  state: {
-    current: 0,
-    tabs: [
-      {
-        nav: {
-          modelName: "",
-        },
-        list: {
-          filter: {},
-          layout: {
-            filters: []
-          }
-        },
-      },
-    ],
+const defaultTab = {
+  ui: {
+    index: 0,
+    id: "",
+    label: "",
+    url: "",
+  } as Tab,
+  nav: {
+    modelName: "",
   },
-  action: ref({}),
+  list: {
+    ready: false,
+    loading: false,
+    filter: {},
+    layout: {
+      filters: [],
+    },
+  },
+};
+
+const internal = proxy({
+  state: {
+    status: "initial" as "initial" | "loading" | "ready",
+    active: { id: "", index: 0 },
+    show: false,
+    tabs: {} as Record<string, typeof defaultTab>,
+  },
+  action: ref({
+    list: {
+      init: (tab: any) => {
+        tab.state.list.ready = true;
+      },
+    },
+  }),
 });
 
-export const useValtioTab = () => {
-  const { state: tab, action } = tabs;
-  return { state: tab.tabs[tab.current]! };
+export const useValtioTab = (opt?: { root: true }) => {
+  const { state: tab, action } = internal;
+
+  const tabs = tab.tabs;
+  if (!tabs[tab.active.id]) {
+    tabs[tab.active.id] = proxy(defaultTab);
+  }
+
+  return { state: tabs[tab.active.id]!, action, write: internal };
 };

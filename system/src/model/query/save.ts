@@ -27,7 +27,6 @@ export interface SaveOptions {
 // Main entry point - with transaction support
 export const save = async (options: SaveOptions) => {
   try {
-    // Use withTransaction utility function instead of manual transaction management
     return await withTransaction({
       operation: async (tx) => {
         return saveWithinTransaction({
@@ -160,6 +159,11 @@ const insertRecord = async ({
   debug,
   client,
 }: SaveOptions & { columns: string[] }): Promise<Record<string, any>> => {
+  if (!columns.includes("created_at")) {
+    columns.push("created_at");
+    data["created_at"] = new Date().toISOString();
+  }
+
   // Use utility function to build insert query
   const { query: insertQuery } = buildInsertQuery(model.table, columns);
   const values = columns.map((col) => data[col]);

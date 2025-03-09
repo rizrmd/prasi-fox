@@ -1,8 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { ModelToolbar } from "../toolbar";
-import { useEffect } from "react";
 import { useValtioTab } from "@/hooks/use-valtio-tab";
+import { useEffect } from "react";
 import { useSnapshot } from "valtio";
+import { ModelToolbar } from "../toolbar";
 
 export const ModelFilter = () => {
   const { state } = useValtioTab();

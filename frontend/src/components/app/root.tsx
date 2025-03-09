@@ -1,19 +1,25 @@
 import { GlobalAlert } from "@/components/ui/global-alert";
-import { ParamsContext, useRoot } from "@/lib/router";
+import { navigate, ParamsContext } from "@/lib/router";
 import { Toaster } from "../ui/sonner";
 import { AppLoading } from "./app-loading";
 import { Layout } from "./layout";
 
+import { useRoot } from "@/hooks/use-router";
 import "@/index.css";
 
 function AppContent() {
-  const { Page, currentPath, isLoading, params } = useRoot();
+  const { Page, currentPath, isLoading, params, auth } = useRoot();
 
   if (isLoading) {
     return <AppLoading />;
   }
 
   if (currentPath.startsWith("/auth")) {
+    if (auth.status === "logged-in") {
+      navigate("/");
+      return <AppLoading />;
+    }
+
     return (
       <>
         {Page ? (

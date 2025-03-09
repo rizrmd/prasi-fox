@@ -2,7 +2,7 @@ import type { ModelBase } from "./base";
 import { findFirst } from "./query/find-first";
 import { findMany } from "./query/find-many";
 import { findList } from "./query/find-list";
-import { save } from "./query/save";
+import { save, type SaveOptions } from "./query/save";
 import type {
   FieldItem,
   WhereClause,
@@ -29,10 +29,7 @@ export type ModelInstance<T extends ModelBase> = {
     options?: PartialFindManyOptions
   ) => Promise<Record<string, any>[]>;
   findList: (options?: PartialFindListOptions) => Promise<FindListResult>;
-  save: (
-    data: Record<string, any>,
-    debug?: SaveDebugFunction
-  ) => Promise<Record<string, any>>;
+  save: (options: Omit<SaveOptions, "model">) => Promise<Record<string, any>>;
 };
 
 export const modelInstance = <T extends ModelBase>(base: T) => {
@@ -95,11 +92,10 @@ export const modelInstance = <T extends ModelBase>(base: T) => {
         debug,
       });
     },
-    async save(data: Record<string, any>, debug?: SaveDebugFunction) {
+    async save(opt: SaveOptions) {
       return save({
-        data,
+        ...opt,
         model: base,
-        debug: debug ? (params) => debug(params) : undefined,
       });
     },
   };

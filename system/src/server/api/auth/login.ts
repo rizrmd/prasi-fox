@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { authBackend } from "system/auth/backend";
 import { translate } from "system/lang/translate";
-import { apiContext, defineAPI } from "system/server/parts/api";
+import { apiContext, defineAPI } from "system/server/parts/api/define";
 
 function verifyPassword(password: string, storedHash: string): boolean {
   const [salt, hash] = storedHash.split(":");
@@ -14,8 +14,16 @@ function verifyPassword(password: string, storedHash: string): boolean {
   return false;
 }
 
+function hashPassword(password: string): string {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto
+    .pbkdf2Sync(password, salt, 1000, 64, "sha512")
+    .toString("hex");
+  return `${salt}:${hash}`;
+}
+
 export default defineAPI({
-  path: "/auth/login",
+  path: "/api/auth/login",
   handler: async function (opt: { username: string; password: string }) {
     const { username, password } = opt;
     const { req, ip } = apiContext(this);
@@ -33,12 +41,9 @@ export default defineAPI({
     try {
       const fields = Object.values(mapping);
 
+      const pk = authBackend.model.user.primaryKey;
       const user = await authBackend.model.user.findFirst({
-        fields: [
-          authBackend.model.user.primaryKey,
-          ...fields,
-          [authBackend.modelName.role, "name"],
-        ],
+        fields: [pk, ...fields, [authBackend.modelName.role, "name"]],
         where: [
           {
             field: mapping.username,
@@ -49,10 +54,29 @@ export default defineAPI({
       });
 
       if (user) {
-        if (verifyPassword(password, user.password)) {
+        let passwordVerified = false;
+        if (user.password === null) {
+          await authBackend.model.user.save({
+            data: {
+              [pk]: user[pk],
+              [mapping.password]: hashPassword(password),
+            },
+          });
+          passwordVerified = true;
+        } else {
+          passwordVerified = verifyPassword(password, user.password);
+        }
+
+        if (passwordVerified) {
+          const mapping = authBackend.config.mapping.session.fields;
           const session = await authBackend.model.session.save({
-            user_id: user.id,
-            status: "active",
+            data: {
+              [mapping.user_id]: user.id,
+              [mapping.status]: "active",
+            },
+            debug: (opt) => {
+              console.log(opt.sql);
+            },
           });
 
           return {

@@ -1,12 +1,11 @@
-import type { BunRequest, Server } from "bun";
-import { api } from "../api";
-import { g } from "./global";
+import type { BunRequest } from "bun";
 
 export const defineAPI = <
   T extends string,
   K extends (...arg: any[]) => Promise<any>
 >(opt: {
   path: T;
+  msgpack?: boolean;
   handler: K;
 }) => {
   return opt;

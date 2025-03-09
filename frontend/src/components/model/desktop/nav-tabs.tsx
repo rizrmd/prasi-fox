@@ -1,5 +1,5 @@
 import { DraggableTabs, type Tab } from "@/components/ext/draggable-tabs";
-import { TabManager } from "@/hooks/use-valtio-tabs/tab-manager";
+import { useValtioTab } from "@/hooks/use-valtio-tab";
 import { navigate, parseRouteParams } from "@/lib/router";
 import { cn } from "@/lib/utils";
 import { css } from "goober";
@@ -7,20 +7,24 @@ import type { FC } from "react";
 import { useSnapshot } from "valtio";
 
 export const ModelNavTabs: FC<{}> = ({}) => {
-  const state = TabManager.state;
-  const nav = useSnapshot(TabManager.state);
+  const { write } = useValtioTab();
+  const nav = useSnapshot(write);
+  const tabs = Object.values(nav.state.tabs)
+    .map((e) => e.ui)
+    .sort((a, b) => a.index - b.index);
+  const activeIndex = tabs.findIndex((e) => e.id === nav.state.active);
 
   return (
     <div className="flex relative items-stretch flex-col overflow-hidden">
       <div
         className={cn(
           "border-b border-sidebar-border transition-all",
-          nav.show ? "h-[40px]" : "h-0"
+          nav.state.show ? "h-[40px]" : "h-0"
         )}
       ></div>
       <DraggableTabs
-        activeIndex={nav.activeIdx}
-        tabs={nav.tabs as Tab[]}
+        activeIndex={activeIndex}
+        tabs={tabs as unknown as Tab[]}
         className={cn(
           "bg-transparent pb-0 pt-0 items-end absolute left-0 top-0 right-0 z-10",
           css`
@@ -42,26 +46,32 @@ export const ModelNavTabs: FC<{}> = ({}) => {
           `
         )}
         onTabChange={(index) => {
-          state.activeIdx = index;
-          navigate(nav.tabs[index]!.url);
+          const tab = tabs[index]!;
+
+          write.state.active = tab.id;
+          navigate(tabs[index]!.url);
         }}
         onTabClose={(tabId) => {
-          const tabIndex = state.tabs.findIndex((e) => e.id);
+          const tabIndex = tabs.findIndex((e) => e.id === tabId);
           if (tabIndex !== -1) {
-            // Remove the tab
-            state.tabs.splice(tabIndex, 1);
-
             // Update active index if needed
-            if (state.tabs.length === 0) {
+            if (tabs.length === 0) {
               navigate("/");
-            } else if (tabIndex <= nav.activeIdx) {
-              state.activeIdx = Math.max(0, state.activeIdx - 1);
-              navigate(nav.tabs[nav.activeIdx]!.url);
+            } else if (tabIndex <= activeIndex) {
+              navigate(nav.state.tabs[nav.state.active]!.ui.url);
             }
           }
         }}
         onTabsReorder={(tabs) => {
-          state.tabs = tabs;
+          // write.tabs = tabs;
+          let i = 0;
+          for (const tab of tabs) {
+            const t = write.state.tabs[tab.id];
+            if (t) {
+              t.ui.index = i;
+            }
+            i++;
+          }
         }}
       />
     </div>

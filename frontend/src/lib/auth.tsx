@@ -1,36 +1,7 @@
 import { Logo } from "@/components/app/logo";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/hooks/use-auth";
 import React from "react";
-import { proxy, ref, useSnapshot } from "valtio";
-
-const authProxy = proxy({
-  state: {
-    status: "loading" as "loading" | "logged-in" | "logged-out",
-    home: "/",
-    user: {
-      id: "",
-      username: "",
-      fullname: "",
-    },
-    role: {
-      id: "",
-      name: "",
-    },
-    session: {
-      id: "",
-    },
-  },
-  action: ref({
-    init() {},
-    async login(opt: { username: string; password: string }) {},
-    logout() {},
-    async register(opt: {}) {},
-  }),
-});
-
-export function useAuth() {
-  return useSnapshot(authProxy);
-}
 
 // Store and retrieve redirect path
 export const storeRedirectPath = (path: string) => {

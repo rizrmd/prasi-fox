@@ -10,10 +10,10 @@
   "scripts": {
     "model": "bun system/src/cli/index.ts",
     "start": "bun system/src/server/start.ts",
-    "dev": "bun --hot system/src/server/start.ts"
+    "dev": "bun --hot system/src/server/start.ts --dev"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.2.4"
   },
   "peerDependencies": {
     "typescript": "^5"

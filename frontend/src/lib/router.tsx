@@ -1,11 +1,9 @@
 import { pageModules } from "@/lib/generated/routes";
-import { createContext, useContext, useEffect } from "react";
+import { createContext } from "react";
 import config from "../../frontend.json";
-import { useLocal } from "../hooks/use-local";
-import { useAuth } from "./auth";
 
 // Normalize basePath to ensure it has trailing slash only if it's not '/'
-const basePath =
+export const basePath =
   config.basePath === "/"
     ? "/"
     : config.basePath.endsWith("/")
@@ -13,7 +11,7 @@ const basePath =
     : config.basePath + "/";
 
 // Utility for consistent path building
-function buildPath(to: string): string {
+export function buildPath(to: string): string {
   return to.startsWith("/")
     ? basePath === "/"
       ? to
@@ -21,8 +19,8 @@ function buildPath(to: string): string {
     : to;
 }
 
-type Params = Record<string, string>;
-type RoutePattern = {
+export type Params = Record<string, string>;
+export type RoutePattern = {
   pattern: string;
   regex: RegExp;
   paramNames: string[];
@@ -30,7 +28,7 @@ type RoutePattern = {
 
 export const ParamsContext = createContext<Params>({});
 
-function parsePattern(pattern: string): RoutePattern {
+export function parsePattern(pattern: string): RoutePattern {
   const paramNames: string[] = [];
   const patternParts = pattern.split("/");
   const regexParts = patternParts.map((part) => {
@@ -56,7 +54,7 @@ function parsePattern(pattern: string): RoutePattern {
   };
 }
 
-function matchRoute(path: string, routePattern: RoutePattern): Params | null {
+export function matchRoute(path: string, routePattern: RoutePattern): Params | null {
   const match = (path.split("#").shift() || "").match(routePattern.regex);
   if (!match) return null;
 
@@ -80,124 +78,6 @@ export function parseRouteParams(path: string): Params | null {
   return null;
 }
 
-const router = {
-  currentPath: window.location.pathname,
-  currentFullPath: window.location.pathname + window.location.hash,
-  params: {} as Params,
-};
-
-export function useRoot() {
-  const { state } = useAuth();
-  const local = useLocal({
-    Page: null as React.ComponentType | null,
-    routePath: "",
-  });
-  useEffect(() => {
-    const handlePathChange = () => {
-      router.currentPath = window.location.pathname;
-      router.currentFullPath = window.location.pathname + window.location.hash;
-      local.render();
-    };
-
-    window.addEventListener("popstate", handlePathChange);
-    return () => window.removeEventListener("popstate", handlePathChange);
-  }, []);
-
-  useEffect(() => {
-    const logRouteChange = async (path: string) => {
-      // api.logRoute(path, user?.id);
-    };
-
-    const loadPage = async () => {
-      // Always strip basePath if it exists, since the route definitions don't include it
-      const withoutBase =
-        basePath !== "/" && router.currentPath.startsWith(basePath)
-          ? router.currentPath.slice(basePath.length)
-          : router.currentPath;
-      // Ensure path starts with slash and handle trailing slashes
-      const path =
-        (withoutBase.startsWith("/") ? withoutBase : "/" + withoutBase).replace(
-          /\/$/,
-          ""
-        ) || "/";
-
-      await logRouteChange(path);
-
-      // Try exact match first
-      let pageLoader = pageModules[path];
-      let matchedParams = {};
-
-      // If no exact match, try parameterized routes
-      if (!pageLoader) {
-        for (const [pattern, loader] of Object.entries(pageModules)) {
-          const routePattern = parsePattern(pattern);
-          const params = matchRoute(path, routePattern);
-          if (params) {
-            pageLoader = loader;
-            matchedParams = params;
-            break;
-          }
-        }
-      }
-
-      if (pageLoader) {
-        try {
-          const module = await pageLoader();
-          local.routePath = path;
-          local.Page = module.default;
-          router.params = matchedParams;
-          local.render();
-        } catch (err) {
-          console.error("Failed to load page:", err);
-          local.Page = null;
-          local.routePath;
-          router.params = {};
-          local.render();
-        }
-      } else {
-        // Load 404 page
-        try {
-          const module = await pageModules["/404"]?.();
-          local.routePath = path;
-          local.Page = module.default;
-          router.params = {};
-          local.render();
-        } catch {
-          local.Page = null;
-          local.routePath = "";
-          router.params = {};
-          local.render();
-        }
-      }
-    };
-
-    loadPage();
-  }, [router.currentPath]);
-
-  const navigate = (to: string) => {
-    const fullPath = buildPath(to);
-    window.history.pushState({}, "", fullPath);
-    window.dispatchEvent(new PopStateEvent("popstate"));
-  };
-
-  return {
-    Page: local.Page ? local.Page : null,
-    currentPath: router.currentPath,
-    params: router.params,
-    isLoading: state.status === "loading",
-  };
-}
-
-export function useRouter() {
-  return router;
-}
-
-export function useParams<T extends Record<string, string>>() {
-  return {
-    params: useContext(ParamsContext) as T,
-    hash: {} as Record<string, string>,
-  };
-}
 
 export function Link({
   to,

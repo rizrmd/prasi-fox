@@ -42,8 +42,8 @@ export const buildLateralJoins = (
       // Create the JSON aggregation select statement
       selectFields.push(
         `(SELECT json_agg(json_build_object(${jsonFields}))
-          FROM ${relatedTable}
-          WHERE ${model.table}.id = ${relatedTable}.${
+          FROM "${relatedTable}"
+          WHERE "${model.table}".id = "${relatedTable}".${
           relationInfo.to.split(".")[1] || relationInfo.from
         }
         ) AS ${tableAlias}`
@@ -56,7 +56,7 @@ export const buildLateralJoins = (
     // For regular belongs_to relations, continue with the lateral join approach
     // Alias each field with the relation name to avoid column name collisions
     for (const field of fields) {
-      selectFields.push(`${tableAlias}.${field} AS ${tableAlias}_${field}`);
+      selectFields.push(`"${tableAlias}".${field} AS "${tableAlias}_${field}"`);
     }
 
     // Build lateral joins for each segment in the relation path
@@ -93,8 +93,8 @@ export const buildLateralJoins = (
       // Create join condition based on relation type
       const joinCondition =
         rel.type === "belongs_to"
-          ? `${currentAlias}.${rel.from} = ${tableName}.id`
-          : `${currentAlias}.id = ${tableName}.${
+          ? `"${currentAlias}".${rel.from} = "${tableName}".id`
+          : `"${currentAlias}".id = "${tableName}".${
               rel.to.split(".")[1] || rel.from
             }`;
 
@@ -111,10 +111,10 @@ export const buildLateralJoins = (
       if (!processedJoins.has(joinKey)) {
         // For belongs_to we still use LIMIT 1 since we only expect one record
         const lateralJoin = `LEFT JOIN LATERAL (
-          SELECT * FROM ${tableName} 
+          SELECT * FROM "${tableName}" 
           WHERE ${joinCondition} 
           LIMIT 1
-        ) AS ${newAlias} ON true`;
+        ) AS "${newAlias}" ON true`;
 
         lateralJoins.push(lateralJoin);
         processedJoins.add(joinKey);
@@ -190,13 +190,13 @@ const buildCondition = (
 
   // Handle NULL values specially
   if (clause.value === null) {
-    return `${tableName}.${fieldName} ${
+    return `"${tableName}".${fieldName} ${
       operator === "!=" ? "IS NOT NULL" : "IS NULL"
     }`;
   }
 
   params.push(clause.value);
-  return `${tableName}.${fieldName} ${operator} $${params.length}`;
+  return `"${tableName}".${fieldName} ${operator} $${params.length}`;
 };
 
 const buildGroup = (
@@ -284,13 +284,13 @@ export const buildSelectQuery = (
     if (!model.columns[field]) {
       for (const [k, v] of Object.entries(model.relations)) {
         if (v.type === "belongs_to" && v.from === field) {
-          return `${model.table}.${field}`;
+          return `"${model.table}".${field}`;
         }
       }
 
       throw new Error(`Column ${field} not found in table ${model.table}`);
     }
-    return `${model.table}.${field}`;
+    return `"${model.table}".${field}`;
   });
 
   // Build lateral joins using the utility function
@@ -307,7 +307,7 @@ export const buildSelectQuery = (
 
   // Build query parts as strings
   const selectClause = selectFields.join(", ");
-  const fromClause = model.table;
+  const fromClause = `"${model.table}"`;
   const lateralJoinsClause =
     lateralJoins.length > 0 ? lateralJoins.join(" ") : "";
   const whereClause = whereClauseStr ? `${whereClauseStr}` : "";

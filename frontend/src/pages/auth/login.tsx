@@ -2,11 +2,12 @@ import { SideForm } from "@/components/ext/side-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AuthRoute, getStoredRedirectPath, useAuth } from "@/lib/auth";
+import { AuthRoute, getStoredRedirectPath } from "@/lib/auth";
 import { Link } from "@/lib/router";
 import { useState } from "react";
 
 import sideImage from "@/img/side-bg.jpeg";
+import { useAuth } from "@/hooks/use-auth";
 
 function LoginPageContent() {
   const { state, action } = useAuth();
@@ -21,9 +22,10 @@ function LoginPageContent() {
     setIsLoading(true);
 
     try {
-      await action.login({ username, password });
-      const redirectPath = getStoredRedirectPath();
-      window.location.href = redirectPath || "/";
+      const res = await action.login({ username, password });
+      console.log(res);
+      // const redirectPath = getStoredRedirectPath();
+      // window.location.href = redirectPath || "/";
     } catch (err: any) {
       setError(err.message);
     } finally {

@@ -6,7 +6,7 @@
   "main": "src/index.tsx",
   "module": "src/index.tsx",
   "scripts": {
-    "dev": "bun run --hot src/index.html",
+    "dev": "bun run --silent --no-clear-screen --watch src/index.html --port=4700",
     "start": "NODE_ENV=production run src/index.html",
     "build": "bun run build.ts"
   },
@@ -36,6 +36,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "crypto-hash": "^3.1.0",
+    "derive-valtio": "^0.2.0",
     "goober": "^2.1.16",
     "hasha": "^6.0.0",
     "lodash.get": "^4.4.2",

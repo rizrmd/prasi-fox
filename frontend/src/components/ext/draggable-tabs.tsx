@@ -30,8 +30,9 @@ import {
 } from "@/components/ui/context-menu";
 import { css } from "goober";
 
-export interface Tab {
+export interface Tab extends Record<string, any> {
   id: string;
+  index: number;
   label: string;
   url: string;
   pinned?: boolean;

@@ -1,18 +1,19 @@
 import { AppLoading } from "@/components/app/app-loading";
-import { TabManager } from "@/hooks/use-valtio-tabs/tab-manager";
 import { ProtectedRoute } from "@/lib/auth";
 import type { FC, ReactNode } from "react";
 import { useSnapshot } from "valtio";
 import { ModelBreadAction } from "./bread/bread-action";
 import { ModelBreadList } from "./bread/bread-list";
 import { ModelNavTabs } from "./nav-tabs";
+import { useValtioTab } from "@/hooks/use-valtio-tab";
 
 export const ModelContainer: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const manager = useSnapshot(TabManager.state);
+  const { write: tabs } = useValtioTab();
+  const manager = useSnapshot(tabs);
 
-  if (manager.activeIdx === -1) {
+  if (manager.state.status === "loading") {
     return (
       <div className="flex items-center justify-center h-full">
         <AppLoading />
