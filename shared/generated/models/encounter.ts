@@ -19,9 +19,6 @@ export const encounter = {
     "encounter_date": {
       "type": "datetime"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -31,7 +28,11 @@ export const encounter = {
     "status": {
       "type": "text"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -45,36 +46,6 @@ export const encounter = {
       "from": "id_client",
       "to": "client.id"
     },
-    "patient": {
-      "type": "belongs_to",
-      "from": "id_patient",
-      "to": "patient.id"
-    },
-    "staff": {
-      "type": "belongs_to",
-      "from": "id_staff",
-      "to": "staff.id"
-    },
-    "room": {
-      "type": "belongs_to",
-      "from": "id_room",
-      "to": "room.id"
-    },
-    "poli": {
-      "type": "belongs_to",
-      "from": "id_poli",
-      "to": "poli.id"
-    },
-    "prescriptions_queue": {
-      "type": "has_many",
-      "from": "id",
-      "to": "prescriptions_queue.id_encounter"
-    },
-    "invoice": {
-      "type": "has_many",
-      "from": "id",
-      "to": "invoice.id_encounter"
-    },
     "emr_patient": {
       "type": "belongs_to",
       "from": "id_emr_patient",
@@ -85,10 +56,124 @@ export const encounter = {
       "from": "id_medical_service",
       "to": "medical_service.id"
     },
+    "patient": {
+      "type": "belongs_to",
+      "from": "id_patient",
+      "to": "patient.id"
+    },
     "patient_queue": {
       "type": "belongs_to",
       "from": "id_patient_queue",
       "to": "patient_queue.id"
+    },
+    "poli": {
+      "type": "belongs_to",
+      "from": "id_poli",
+      "to": "poli.id"
+    },
+    "room": {
+      "type": "belongs_to",
+      "from": "id_room",
+      "to": "room.id"
+    },
+    "staff": {
+      "type": "belongs_to",
+      "from": "id_staff",
+      "to": "staff.id"
+    },
+    "invoice": {
+      "type": "has_many",
+      "from": "id",
+      "to": "invoice.id_encounter"
+    },
+    "prescriptions_queue": {
+      "type": "has_many",
+      "from": "id",
+      "to": "prescriptions_queue.id_encounter"
     }
+  },
+  "label": {
+    "title": "Encounter",
+    "record_title": [
+      "patient_name",
+      "doctor_name"
+    ],
+    "fields": [
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "doctor_name": [
+          "Doctor Name"
+        ]
+      },
+      {
+        "encounter_type": [
+          "Encounter Type"
+        ]
+      },
+      {
+        "encounter_date": [
+          "Encounter Date"
+        ]
+      },
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "emr_patient": [
+          "Emr Patient"
+        ]
+      },
+      {
+        "medical_service": [
+          "Medical Service"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      },
+      {
+        "patient_queue": [
+          "Patient Queue"
+        ]
+      },
+      {
+        "poli": [
+          "Poli"
+        ]
+      },
+      {
+        "room": [
+          "Room"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      },
+      {
+        "prescriptions_queue": [
+          "Prescriptions Queue"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

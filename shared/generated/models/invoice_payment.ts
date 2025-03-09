@@ -25,9 +25,6 @@ export const invoice_payment = {
     "reference_number": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -37,7 +34,11 @@ export const invoice_payment = {
     "status": {
       "type": "text"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -61,5 +62,64 @@ export const invoice_payment = {
       "from": "id_patient",
       "to": "patient.id"
     }
+  },
+  "label": {
+    "title": "Invoice payment",
+    "record_title": [
+      "patient_name",
+      "invoice_number"
+    ],
+    "fields": [
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "invoice_number": [
+          "Invoice Number"
+        ]
+      },
+      {
+        "payment_date": [
+          "Payment Date"
+        ]
+      },
+      {
+        "payment_method": [
+          "Payment Method"
+        ]
+      },
+      {
+        "amount_paid": [
+          "Amount Paid"
+        ]
+      },
+      {
+        "reference_number": [
+          "Reference Number"
+        ]
+      },
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

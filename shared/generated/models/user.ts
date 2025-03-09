@@ -19,20 +19,25 @@ export const user = {
     "username": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "updated_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "role": {
+      "type": "text"
     }
   },
   "relations": {
@@ -41,25 +46,74 @@ export const user = {
       "from": "id_client",
       "to": "client.id"
     },
-    "staff_role": {
-      "type": "belongs_to",
-      "from": "id_staff_role",
-      "to": "staff_role.id"
-    },
     "staff": {
       "type": "belongs_to",
       "from": "id_staff",
       "to": "staff.id"
     },
-    "session": {
-      "type": "has_many",
-      "from": "id",
-      "to": "session.id_user"
-    },
     "user_menu": {
       "type": "has_many",
       "from": "id",
       "to": "user_menu.id_user"
+    },
+    "session": {
+      "type": "has_many",
+      "from": "id",
+      "to": "session.id_user"
     }
+  },
+  "label": {
+    "title": "User",
+    "record_title": [
+      "display_name",
+      "email"
+    ],
+    "fields": [
+      {
+        "display_name": [
+          "Display Name"
+        ]
+      },
+      {
+        "email": [
+          "Email"
+        ]
+      },
+      {
+        "password": [
+          "Password"
+        ]
+      },
+      {
+        "username": [
+          "Username"
+        ]
+      },
+      {
+        "role": [
+          "Role"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      },
+      {
+        "user_menu": [
+          "User Menu"
+        ]
+      },
+      {
+        "session": [
+          "Session"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

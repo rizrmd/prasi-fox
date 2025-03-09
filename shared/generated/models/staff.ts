@@ -46,14 +46,8 @@ export const staff = {
     "end_date": {
       "type": "datetime"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "updated_by": {
       "type": "uuid"
@@ -64,38 +58,36 @@ export const staff = {
     "status": {
       "type": "text",
       "default": "Available"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
-    "client": {
-      "type": "belongs_to",
-      "from": "id_client",
-      "to": "client.id"
-    },
-    "prescriptions_queue": {
-      "type": "has_many",
-      "from": "id",
-      "to": "prescriptions_queue.id_staff"
-    },
-    "prescriptions": {
-      "type": "has_many",
-      "from": "id",
-      "to": "prescriptions.id_staff"
-    },
-    "patient_queue": {
-      "type": "has_many",
-      "from": "id",
-      "to": "patient_queue.id_doctor"
-    },
-    "patient_room": {
-      "type": "has_many",
-      "from": "id",
-      "to": "patient_room.id_doctor"
-    },
     "emr": {
       "type": "has_many",
       "from": "id",
       "to": "emr.id_doctor"
+    },
+    "schedule_doctor": {
+      "type": "has_many",
+      "from": "id",
+      "to": "schedule_doctor.id_staff"
+    },
+    "schedule_poli": {
+      "type": "has_many",
+      "from": "id",
+      "to": "schedule_poli.id_staff"
+    },
+    "client": {
+      "type": "belongs_to",
+      "from": "id_client",
+      "to": "client.id"
     },
     "staff_role": {
       "type": "belongs_to",
@@ -112,25 +104,179 @@ export const staff = {
       "from": "id",
       "to": "encounter.id_staff"
     },
-    "schedule_poli": {
-      "type": "has_many",
-      "from": "id",
-      "to": "schedule_poli.id_staff"
-    },
-    "schedule_doctor": {
-      "type": "has_many",
-      "from": "id",
-      "to": "schedule_doctor.id_staff"
-    },
     "invoice": {
       "type": "has_many",
       "from": "id",
       "to": "invoice.id_staff"
+    },
+    "patient_queue": {
+      "type": "has_many",
+      "from": "id",
+      "to": "patient_queue.id_doctor"
+    },
+    "patient_room": {
+      "type": "has_many",
+      "from": "id",
+      "to": "patient_room.id_doctor"
+    },
+    "prescriptions": {
+      "type": "has_many",
+      "from": "id",
+      "to": "prescriptions.id_staff"
+    },
+    "prescriptions_queue": {
+      "type": "has_many",
+      "from": "id",
+      "to": "prescriptions_queue.id_staff"
     },
     "staff_log": {
       "type": "has_many",
       "from": "id",
       "to": "staff_log.id_staff"
     }
+  },
+  "label": {
+    "title": "Staff",
+    "record_title": [
+      "name",
+      "nik"
+    ],
+    "fields": [
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "nik": [
+          "Nik"
+        ]
+      },
+      {
+        "birth_date": [
+          "Birth Date"
+        ]
+      },
+      {
+        "birth_place": [
+          "Birth Place"
+        ]
+      },
+      {
+        "gender": [
+          "Gender"
+        ]
+      },
+      {
+        "address": [
+          "Address"
+        ]
+      },
+      {
+        "ihs_number": [
+          "Ihs Number"
+        ]
+      },
+      {
+        "phone_number": [
+          "Phone Number"
+        ]
+      },
+      {
+        "speciality": [
+          "Speciality"
+        ]
+      },
+      {
+        "certified": [
+          "Certified"
+        ]
+      },
+      {
+        "issuer": [
+          "Issuer"
+        ]
+      },
+      {
+        "start_date": [
+          "Start Date"
+        ]
+      },
+      {
+        "end_date": [
+          "End Date"
+        ]
+      },
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "emr": [
+          "Emr"
+        ]
+      },
+      {
+        "schedule_doctor": [
+          "Schedule Doctor"
+        ]
+      },
+      {
+        "schedule_poli": [
+          "Schedule Poli"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "staff_role": [
+          "Staff Role"
+        ]
+      },
+      {
+        "user": [
+          "User"
+        ]
+      },
+      {
+        "encounter": [
+          "Encounter"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      },
+      {
+        "patient_queue": [
+          "Patient Queue"
+        ]
+      },
+      {
+        "patient_room": [
+          "Patient Room"
+        ]
+      },
+      {
+        "prescriptions": [
+          "Prescriptions"
+        ]
+      },
+      {
+        "prescriptions_queue": [
+          "Prescriptions Queue"
+        ]
+      },
+      {
+        "staff_log": [
+          "Staff Log"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

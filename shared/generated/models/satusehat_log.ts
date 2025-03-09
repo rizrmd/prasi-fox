@@ -25,9 +25,6 @@ export const satusehat_log = {
     "error_message": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -38,7 +35,11 @@ export const satusehat_log = {
       "type": "json",
       "default": "{}"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -52,5 +53,54 @@ export const satusehat_log = {
       "from": "id_client",
       "to": "client.id"
     }
+  },
+  "label": {
+    "title": "Satusehat log",
+    "record_title": [
+      "endpoint",
+      "status"
+    ],
+    "fields": [
+      {
+        "endpoint": [
+          "Endpoint"
+        ]
+      },
+      {
+        "request_body": [
+          "Request Body"
+        ]
+      },
+      {
+        "response_body": [
+          "Response Body"
+        ]
+      },
+      {
+        "status_code": [
+          "Status Code"
+        ]
+      },
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "error_message": [
+          "Error Message"
+        ]
+      },
+      {
+        "resource_data": [
+          "Resource Data"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

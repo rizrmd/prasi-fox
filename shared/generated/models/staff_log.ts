@@ -22,16 +22,17 @@ export const staff_log = {
     "date": {
       "type": "datetime"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -45,15 +46,64 @@ export const staff_log = {
       "from": "id_client",
       "to": "client.id"
     },
-    "staff_role": {
-      "type": "belongs_to",
-      "from": "id_staff_role",
-      "to": "staff_role.id"
-    },
     "staff": {
       "type": "belongs_to",
       "from": "id_staff",
       "to": "staff.id"
+    },
+    "staff_role": {
+      "type": "belongs_to",
+      "from": "id_staff_role",
+      "to": "staff_role.id"
     }
+  },
+  "label": {
+    "title": "Staff log",
+    "record_title": [
+      "staff_name",
+      "staff_role"
+    ],
+    "fields": [
+      {
+        "staff_name": [
+          "Staff Name"
+        ]
+      },
+      {
+        "staff_role": [
+          "Staff Role"
+        ]
+      },
+      {
+        "activity_type": [
+          "Activity Type"
+        ]
+      },
+      {
+        "activity_description": [
+          "Activity Description"
+        ]
+      },
+      {
+        "date": [
+          "Date"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      },
+      {
+        "staff_role": [
+          "Staff Role"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

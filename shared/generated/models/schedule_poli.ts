@@ -10,9 +10,6 @@ export const schedule_poli = {
     "poli_name": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -28,7 +25,11 @@ export const schedule_poli = {
     "end_time": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -42,15 +43,59 @@ export const schedule_poli = {
       "from": "id_client",
       "to": "client.id"
     },
-    "staff": {
-      "type": "belongs_to",
-      "from": "id_staff",
-      "to": "staff.id"
-    },
     "poli": {
       "type": "belongs_to",
       "from": "id_poli",
       "to": "poli.id"
+    },
+    "staff": {
+      "type": "belongs_to",
+      "from": "id_staff",
+      "to": "staff.id"
     }
+  },
+  "label": {
+    "title": "Schedule poli",
+    "record_title": [
+      "poli_name",
+      "day"
+    ],
+    "fields": [
+      {
+        "poli_name": [
+          "Poli Name"
+        ]
+      },
+      {
+        "day": [
+          "Day"
+        ]
+      },
+      {
+        "start_time": [
+          "Start Time"
+        ]
+      },
+      {
+        "end_time": [
+          "End Time"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "poli": [
+          "Poli"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

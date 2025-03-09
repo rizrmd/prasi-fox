@@ -37,13 +37,6 @@ export const medicine = {
     "ingredients": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime",
-      "default": "now()"
-    },
-    "updated_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -55,9 +48,22 @@ export const medicine = {
     },
     "category": {
       "type": "text"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
+    "emr_diagnosis_treatment": {
+      "type": "has_many",
+      "from": "id",
+      "to": "emr_diagnosis_treatment.id_medicine"
+    },
     "client": {
       "type": "belongs_to",
       "from": "id_client",
@@ -67,11 +73,85 @@ export const medicine = {
       "type": "has_many",
       "from": "id",
       "to": "prescriptions.id_medicine"
-    },
-    "emr_diagnosis_treatment": {
-      "type": "has_many",
-      "from": "id",
-      "to": "emr_diagnosis_treatment.id_medicine"
     }
+  },
+  "label": {
+    "title": "Medicine",
+    "record_title": [
+      "code",
+      "name"
+    ],
+    "fields": [
+      {
+        "code": [
+          "Code"
+        ]
+      },
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "package": [
+          "Package"
+        ]
+      },
+      {
+        "stock": [
+          "Stock"
+        ]
+      },
+      {
+        "expired_date": [
+          "Expired Date"
+        ]
+      },
+      {
+        "manufacturer": [
+          "Manufacturer"
+        ]
+      },
+      {
+        "is_fast_moving": [
+          "Is Fast Moving"
+        ]
+      },
+      {
+        "dosage": [
+          "Dosage"
+        ]
+      },
+      {
+        "price": [
+          "Price"
+        ]
+      },
+      {
+        "ingredients": [
+          "Ingredients"
+        ]
+      },
+      {
+        "category": [
+          "Category"
+        ]
+      },
+      {
+        "emr_diagnosis_treatment": [
+          "Emr Diagnosis Treatment"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "prescriptions": [
+          "Prescriptions"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

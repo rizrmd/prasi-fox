@@ -34,9 +34,6 @@ export const patient_queue = {
     "referring_physician": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -71,7 +68,11 @@ export const patient_queue = {
     "referring_faskes": {
       "type": "text"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -80,30 +81,154 @@ export const patient_queue = {
     }
   },
   "relations": {
+    "encounter": {
+      "type": "has_many",
+      "from": "id",
+      "to": "encounter.id_patient_queue"
+    },
     "client": {
       "type": "belongs_to",
       "from": "id_client",
       "to": "client.id"
-    },
-    "patient": {
-      "type": "belongs_to",
-      "from": "id_patient",
-      "to": "patient.id"
     },
     "doctor": {
       "type": "belongs_to",
       "from": "id_doctor",
       "to": "staff.id"
     },
+    "patient": {
+      "type": "belongs_to",
+      "from": "id_patient",
+      "to": "patient.id"
+    },
     "poli": {
       "type": "belongs_to",
       "from": "id_poli",
       "to": "poli.id"
-    },
-    "encounter": {
-      "type": "has_many",
-      "from": "id",
-      "to": "encounter.id_patient_queue"
     }
+  },
+  "label": {
+    "title": "Patient queue",
+    "record_title": [
+      "patient_name",
+      "queue_number"
+    ],
+    "fields": [
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "queue_number": [
+          "Queue Number"
+        ]
+      },
+      {
+        "registered_date": [
+          "Registered Date"
+        ]
+      },
+      {
+        "patient_phone": [
+          "Patient Phone"
+        ]
+      },
+      {
+        "channel_name": [
+          "Channel Name"
+        ]
+      },
+      {
+        "queue_status": [
+          "Queue Status"
+        ]
+      },
+      {
+        "reschedule_date": [
+          "Reschedule Date"
+        ]
+      },
+      {
+        "referral_letter_number": [
+          "Referral Letter Number"
+        ]
+      },
+      {
+        "referring_physician": [
+          "Referring Physician"
+        ]
+      },
+      {
+        "is_referred": [
+          "Is Referred"
+        ]
+      },
+      {
+        "reservation_doctor": [
+          "Reservation Doctor"
+        ]
+      },
+      {
+        "reservation_poli": [
+          "Reservation Poli"
+        ]
+      },
+      {
+        "reservation_date": [
+          "Reservation Date"
+        ]
+      },
+      {
+        "contact_name": [
+          "Contact Name"
+        ]
+      },
+      {
+        "contact_phone": [
+          "Contact Phone"
+        ]
+      },
+      {
+        "has_bpjs": [
+          "Has Bpjs"
+        ]
+      },
+      {
+        "bpjs_number": [
+          "Bpjs Number"
+        ]
+      },
+      {
+        "referring_faskes": [
+          "Referring Faskes"
+        ]
+      },
+      {
+        "encounter": [
+          "Encounter"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "doctor": [
+          "Doctor"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      },
+      {
+        "poli": [
+          "Poli"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

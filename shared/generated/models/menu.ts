@@ -25,23 +25,16 @@ export const menu = {
     "created_at": {
       "type": "datetime"
     },
-    "update_at": {
-      "type": "datetime"
-    },
     "deleted_at": {
       "type": "datetime"
     },
     "description": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime",
-      "default": "now()"
-    },
     "created_by": {
       "type": "uuid"
     },
-    "updated_date": {
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -65,5 +58,59 @@ export const menu = {
       "from": "id",
       "to": "user_menu.id_menu"
     }
+  },
+  "label": {
+    "title": "Menu",
+    "record_title": [
+      "id_parent",
+      "name"
+    ],
+    "fields": [
+      {
+        "id_parent": [
+          "Id Parent"
+        ]
+      },
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "url_menu": [
+          "Url Menu"
+        ]
+      },
+      {
+        "is_active": [
+          "Is Active"
+        ]
+      },
+      {
+        "sequence": [
+          "Sequence"
+        ]
+      },
+      {
+        "description": [
+          "Description"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "role_menu": [
+          "Role Menu"
+        ]
+      },
+      {
+        "user_menu": [
+          "User Menu"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

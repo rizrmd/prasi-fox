@@ -22,14 +22,8 @@ export const medical_service = {
     "created_by": {
       "type": "uuid"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "updated_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "deleted_at": {
       "type": "datetime"
@@ -39,6 +33,14 @@ export const medical_service = {
     },
     "id_medicine": {
       "type": "uuid"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
@@ -52,5 +54,54 @@ export const medical_service = {
       "from": "id",
       "to": "encounter.id_medical_service"
     }
+  },
+  "label": {
+    "title": "Medical service",
+    "record_title": [
+      "name",
+      "code"
+    ],
+    "fields": [
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "code": [
+          "Code"
+        ]
+      },
+      {
+        "description": [
+          "Description"
+        ]
+      },
+      {
+        "price": [
+          "Price"
+        ]
+      },
+      {
+        "id_treatment": [
+          "Id Treatment"
+        ]
+      },
+      {
+        "id_medicine": [
+          "Id Medicine"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "encounter": [
+          "Encounter"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

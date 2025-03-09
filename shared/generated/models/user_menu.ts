@@ -10,14 +10,19 @@ export const user_menu = {
     "created_date": {
       "type": "datetime"
     },
-    "updated_date": {
-      "type": "datetime"
-    },
     "deleted_at": {
       "type": "datetime"
     },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
     "created_by": {
       "type": "uuid"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     },
     "updated_by": {
       "type": "uuid"
@@ -39,5 +44,31 @@ export const user_menu = {
       "from": "id_user",
       "to": "user.id"
     }
+  },
+  "label": {
+    "title": "User menu",
+    "record_title": [],
+    "fields": [
+      {
+        "created_date": [
+          "Created Date"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "menu": [
+          "Menu"
+        ]
+      },
+      {
+        "user": [
+          "User"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

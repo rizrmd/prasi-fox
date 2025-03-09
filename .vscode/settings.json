@@ -7,7 +7,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "node_modules": true,
-    "shared/generated": true,
     ".vscode": true,
     "shared/package.json": true,
     "bun.lock": true,
@@ -15,16 +14,6 @@
     ".gitignore": true,
     "package-lock.json": true
   },
-  "hide-files.files": [
-    "node_modules",
-    "shared/generated",
-    ".vscode",
-    "shared/package.json",
-    "bun.lock",
-    "system/src/config",
-    ".gitignore",
-    "package-lock.json"
-  ],
   "yaml.schemas": {
     "./system/docs/schema/model.json": "**/model.yml",
     "./system/docs/schema/label.json": "**/label.yml"

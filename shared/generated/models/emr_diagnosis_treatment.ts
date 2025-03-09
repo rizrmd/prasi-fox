@@ -22,16 +22,17 @@ export const emr_diagnosis_treatment = {
     "notes": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -65,5 +66,64 @@ export const emr_diagnosis_treatment = {
       "from": "id_treatment",
       "to": "treatment.id"
     }
+  },
+  "label": {
+    "title": "Emr diagnosis treatment",
+    "record_title": [
+      "diagnosis",
+      "treatment"
+    ],
+    "fields": [
+      {
+        "diagnosis": [
+          "Diagnosis"
+        ]
+      },
+      {
+        "treatment": [
+          "Treatment"
+        ]
+      },
+      {
+        "medicine": [
+          "Medicine"
+        ]
+      },
+      {
+        "medicine_rules": [
+          "Medicine Rules"
+        ]
+      },
+      {
+        "notes": [
+          "Notes"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "diagnosis": [
+          "Diagnosis"
+        ]
+      },
+      {
+        "emr": [
+          "Emr"
+        ]
+      },
+      {
+        "medicine": [
+          "Medicine"
+        ]
+      },
+      {
+        "treatment": [
+          "Treatment"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

@@ -20,14 +20,10 @@ export const session = {
     "device_uuid": {
       "type": "uuid"
     },
-    "created_date": {
-      "type": "datetime",
-      "default": "now()"
-    },
     "created_by": {
       "type": "uuid"
     },
-    "updated_date": {
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -44,5 +40,34 @@ export const session = {
       "from": "id_user",
       "to": "user.id"
     }
+  },
+  "label": {
+    "title": "Session",
+    "record_title": [
+      "status",
+      "device_uuid"
+    ],
+    "fields": [
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "expired_at": [
+          "Expired At"
+        ]
+      },
+      {
+        "device_uuid": [
+          "Device Uuid"
+        ]
+      },
+      {
+        "user": [
+          "User"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

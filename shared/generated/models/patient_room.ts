@@ -34,16 +34,17 @@ export const patient_room = {
     "created_by": {
       "type": "uuid"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "deleted_at": {
       "type": "datetime"
     },
     "admission_reason": {
       "type": "text"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -57,20 +58,94 @@ export const patient_room = {
       "from": "id_client",
       "to": "client.id"
     },
-    "patient": {
-      "type": "belongs_to",
-      "from": "id_patient",
-      "to": "patient.id"
-    },
     "doctor": {
       "type": "belongs_to",
       "from": "id_doctor",
       "to": "staff.id"
+    },
+    "patient": {
+      "type": "belongs_to",
+      "from": "id_patient",
+      "to": "patient.id"
     },
     "room": {
       "type": "belongs_to",
       "from": "id_room",
       "to": "room.id"
     }
+  },
+  "label": {
+    "title": "Patient room",
+    "record_title": [
+      "patient_name",
+      "contact_name"
+    ],
+    "fields": [
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "contact_name": [
+          "Contact Name"
+        ]
+      },
+      {
+        "phone_number": [
+          "Phone Number"
+        ]
+      },
+      {
+        "admission_date": [
+          "Admission Date"
+        ]
+      },
+      {
+        "referral_letter_number": [
+          "Referral Letter Number"
+        ]
+      },
+      {
+        "referring_physician": [
+          "Referring Physician"
+        ]
+      },
+      {
+        "room_name": [
+          "Room Name"
+        ]
+      },
+      {
+        "doctor_name": [
+          "Doctor Name"
+        ]
+      },
+      {
+        "admission_reason": [
+          "Admission Reason"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "doctor": [
+          "Doctor"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      },
+      {
+        "room": [
+          "Room"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

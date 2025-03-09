@@ -28,9 +28,6 @@ export const prescriptions = {
     "notes": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -40,7 +37,11 @@ export const prescriptions = {
     "quantity": {
       "type": "text"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -49,15 +50,15 @@ export const prescriptions = {
     }
   },
   "relations": {
+    "invoice": {
+      "type": "has_many",
+      "from": "id",
+      "to": "invoice.id_prescription"
+    },
     "client": {
       "type": "belongs_to",
       "from": "id_client",
       "to": "client.id"
-    },
-    "patient": {
-      "type": "belongs_to",
-      "from": "id_patient",
-      "to": "patient.id"
     },
     "doctor": {
       "type": "belongs_to",
@@ -74,6 +75,11 @@ export const prescriptions = {
       "from": "id_medicine",
       "to": "medicine.id"
     },
+    "patient": {
+      "type": "belongs_to",
+      "from": "id_patient",
+      "to": "patient.id"
+    },
     "staff": {
       "type": "belongs_to",
       "from": "id_staff",
@@ -83,11 +89,95 @@ export const prescriptions = {
       "type": "has_many",
       "from": "id",
       "to": "prescriptions_queue.id_prescription"
-    },
-    "invoice": {
-      "type": "has_many",
-      "from": "id",
-      "to": "invoice.id_prescription"
     }
+  },
+  "label": {
+    "title": "Prescriptions",
+    "record_title": [
+      "patient_name",
+      "doctor_name"
+    ],
+    "fields": [
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "doctor_name": [
+          "Doctor Name"
+        ]
+      },
+      {
+        "medicine_code": [
+          "Medicine Code"
+        ]
+      },
+      {
+        "medicine_name": [
+          "Medicine Name"
+        ]
+      },
+      {
+        "dosage": [
+          "Dosage"
+        ]
+      },
+      {
+        "dosage_instructions": [
+          "Dosage Instructions"
+        ]
+      },
+      {
+        "notes": [
+          "Notes"
+        ]
+      },
+      {
+        "quantity": [
+          "Quantity"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "doctor": [
+          "Doctor"
+        ]
+      },
+      {
+        "emr": [
+          "Emr"
+        ]
+      },
+      {
+        "medicine": [
+          "Medicine"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      },
+      {
+        "prescriptions_queue": [
+          "Prescriptions Queue"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

@@ -25,13 +25,14 @@ export const emr_anamnesis = {
     "created_by": {
       "type": "uuid"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "deleted_date": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -53,5 +54,54 @@ export const emr_anamnesis = {
       "from": "id_emr",
       "to": "emr.id"
     }
+  },
+  "label": {
+    "title": "Emr anamnesis",
+    "record_title": [
+      "condition_patient",
+      "medical_history"
+    ],
+    "fields": [
+      {
+        "condition_patient": [
+          "Condition Patient"
+        ]
+      },
+      {
+        "medical_history": [
+          "Medical History"
+        ]
+      },
+      {
+        "familymember_history": [
+          "Familymember History"
+        ]
+      },
+      {
+        "allergy_intolerance": [
+          "Allergy Intolerance"
+        ]
+      },
+      {
+        "medication_statement": [
+          "Medication Statement"
+        ]
+      },
+      {
+        "deleted_date": [
+          "Deleted Date"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "emr": [
+          "Emr"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

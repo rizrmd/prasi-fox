@@ -10,52 +10,87 @@ export const staff_role = {
     "name": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "updated_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
-    "client": {
-      "type": "belongs_to",
-      "from": "id_client",
-      "to": "client.id"
-    },
     "role_menu": {
       "type": "has_many",
       "from": "id",
       "to": "role_menu.id_staff_role"
-    },
-    "user": {
-      "type": "has_many",
-      "from": "id",
-      "to": "user.id_staff_role"
     },
     "schedule_doctor": {
       "type": "has_many",
       "from": "id",
       "to": "schedule_doctor.id_staff_role"
     },
-    "staff_log": {
-      "type": "has_many",
-      "from": "id",
-      "to": "staff_log.id_staff_role"
-    },
     "staff": {
       "type": "has_many",
       "from": "id",
       "to": "staff.id_staff_role"
+    },
+    "client": {
+      "type": "belongs_to",
+      "from": "id_client",
+      "to": "client.id"
+    },
+    "staff_log": {
+      "type": "has_many",
+      "from": "id",
+      "to": "staff_log.id_staff_role"
     }
+  },
+  "label": {
+    "title": "Staff role",
+    "record_title": [
+      "name"
+    ],
+    "fields": [
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "role_menu": [
+          "Role Menu"
+        ]
+      },
+      {
+        "schedule_doctor": [
+          "Schedule Doctor"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "staff_log": [
+          "Staff Log"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

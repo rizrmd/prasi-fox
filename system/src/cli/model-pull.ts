@@ -2,6 +2,7 @@ import { sql } from "bun";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { stringify } from "yaml";
+import { modelGenerate } from "./model-generate";
 import { auditColumns } from "./model-utils";
 
 // Types for better type safety
@@ -561,6 +562,10 @@ export async function modelPull() {
     if (!dryRun) {
       await writeModelFiles(tableMap);
       console.log("\n✅ Successfully pulled database schema");
+      
+      // Generate TypeScript models after pulling
+      console.log("\nGenerating TypeScript models...");
+      await modelGenerate();
     } else {
       console.log(
         "\n✅ Dry run completed successfully. No files were written."

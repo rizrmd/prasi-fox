@@ -10,14 +10,8 @@ export const schedule_doctor = {
     "doctor_name": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "updated_by": {
       "type": "uuid"
@@ -33,6 +27,14 @@ export const schedule_doctor = {
     },
     "end_time": {
       "type": "datetime"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
@@ -41,20 +43,69 @@ export const schedule_doctor = {
       "from": "id_client",
       "to": "client.id"
     },
-    "staff_role": {
+    "poli": {
       "type": "belongs_to",
-      "from": "id_staff_role",
-      "to": "staff_role.id"
+      "from": "id_poli",
+      "to": "poli.id"
     },
     "staff": {
       "type": "belongs_to",
       "from": "id_staff",
       "to": "staff.id"
     },
-    "poli": {
+    "staff_role": {
       "type": "belongs_to",
-      "from": "id_poli",
-      "to": "poli.id"
+      "from": "id_staff_role",
+      "to": "staff_role.id"
     }
+  },
+  "label": {
+    "title": "Schedule doctor",
+    "record_title": [
+      "doctor_name",
+      "day"
+    ],
+    "fields": [
+      {
+        "doctor_name": [
+          "Doctor Name"
+        ]
+      },
+      {
+        "day": [
+          "Day"
+        ]
+      },
+      {
+        "start_time": [
+          "Start Time"
+        ]
+      },
+      {
+        "end_time": [
+          "End Time"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "poli": [
+          "Poli"
+        ]
+      },
+      {
+        "staff": [
+          "Staff"
+        ]
+      },
+      {
+        "staff_role": [
+          "Staff Role"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

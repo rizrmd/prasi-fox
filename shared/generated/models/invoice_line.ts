@@ -19,9 +19,6 @@ export const invoice_line = {
     "total_price": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
@@ -40,7 +37,11 @@ export const invoice_line = {
     "id_medicine": {
       "type": "uuid"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -59,5 +60,64 @@ export const invoice_line = {
       "from": "id_invoice",
       "to": "invoice.id"
     }
+  },
+  "label": {
+    "title": "Invoice line",
+    "record_title": [
+      "description",
+      "quantity"
+    ],
+    "fields": [
+      {
+        "description": [
+          "Description"
+        ]
+      },
+      {
+        "quantity": [
+          "Quantity"
+        ]
+      },
+      {
+        "unit_price": [
+          "Unit Price"
+        ]
+      },
+      {
+        "total_price": [
+          "Total Price"
+        ]
+      },
+      {
+        "treatment_name": [
+          "Treatment Name"
+        ]
+      },
+      {
+        "id_treatment": [
+          "Id Treatment"
+        ]
+      },
+      {
+        "medicine_name": [
+          "Medicine Name"
+        ]
+      },
+      {
+        "id_medicine": [
+          "Id Medicine"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

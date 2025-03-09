@@ -25,20 +25,22 @@ export const room = {
     "description": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "updated_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
@@ -57,5 +59,59 @@ export const room = {
       "from": "id",
       "to": "patient_room.id_room"
     }
+  },
+  "label": {
+    "title": "Room",
+    "record_title": [
+      "name",
+      "status"
+    ],
+    "fields": [
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "service_class": [
+          "Service Class"
+        ]
+      },
+      {
+        "longitude": [
+          "Longitude"
+        ]
+      },
+      {
+        "latitude": [
+          "Latitude"
+        ]
+      },
+      {
+        "description": [
+          "Description"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "encounter": [
+          "Encounter"
+        ]
+      },
+      {
+        "patient_room": [
+          "Patient Room"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

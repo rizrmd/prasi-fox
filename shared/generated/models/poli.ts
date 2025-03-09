@@ -13,14 +13,8 @@ export const poli = {
     "status": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
-    },
-    "updated_date": {
-      "type": "datetime"
     },
     "updated_by": {
       "type": "uuid"
@@ -30,6 +24,14 @@ export const poli = {
     },
     "poli_code": {
       "type": "text"
+    },
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "default": "now()"
     }
   },
   "relations": {
@@ -38,25 +40,74 @@ export const poli = {
       "from": "id_client",
       "to": "client.id"
     },
-    "encounter": {
+    "schedule_doctor": {
       "type": "has_many",
       "from": "id",
-      "to": "encounter.id_poli"
+      "to": "schedule_doctor.id_poli"
     },
     "schedule_poli": {
       "type": "has_many",
       "from": "id",
       "to": "schedule_poli.id_poli"
     },
-    "schedule_doctor": {
+    "encounter": {
       "type": "has_many",
       "from": "id",
-      "to": "schedule_doctor.id_poli"
+      "to": "encounter.id_poli"
     },
     "patient_queue": {
       "type": "has_many",
       "from": "id",
       "to": "patient_queue.id_poli"
     }
+  },
+  "label": {
+    "title": "Poli",
+    "record_title": [
+      "name",
+      "status"
+    ],
+    "fields": [
+      {
+        "name": [
+          "Name"
+        ]
+      },
+      {
+        "status": [
+          "Status"
+        ]
+      },
+      {
+        "poli_code": [
+          "Poli Code"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "schedule_doctor": [
+          "Schedule Doctor"
+        ]
+      },
+      {
+        "schedule_poli": [
+          "Schedule Poli"
+        ]
+      },
+      {
+        "encounter": [
+          "Encounter"
+        ]
+      },
+      {
+        "patient_queue": [
+          "Patient Queue"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

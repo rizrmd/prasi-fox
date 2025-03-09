@@ -31,16 +31,17 @@ export const invoice_claim = {
     "claim_status": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -64,5 +65,69 @@ export const invoice_claim = {
       "from": "id_patient",
       "to": "patient.id"
     }
+  },
+  "label": {
+    "title": "Invoice claim",
+    "record_title": [
+      "invoice_number",
+      "patient_name"
+    ],
+    "fields": [
+      {
+        "invoice_number": [
+          "Invoice Number"
+        ]
+      },
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "claim_date": [
+          "Claim Date"
+        ]
+      },
+      {
+        "payer_type": [
+          "Payer Type"
+        ]
+      },
+      {
+        "payer_number": [
+          "Payer Number"
+        ]
+      },
+      {
+        "claim_amount": [
+          "Claim Amount"
+        ]
+      },
+      {
+        "approved_amount": [
+          "Approved Amount"
+        ]
+      },
+      {
+        "claim_status": [
+          "Claim Status"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

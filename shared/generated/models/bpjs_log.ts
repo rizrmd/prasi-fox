@@ -28,13 +28,14 @@ export const bpjs_log = {
     "created_by": {
       "type": "uuid"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "deleted_at": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -58,5 +59,59 @@ export const bpjs_log = {
       "from": "id_patient",
       "to": "patient.id"
     }
+  },
+  "label": {
+    "title": "Bpjs log",
+    "record_title": [
+      "patient_name",
+      "bpjs_number"
+    ],
+    "fields": [
+      {
+        "patient_name": [
+          "Patient Name"
+        ]
+      },
+      {
+        "bpjs_number": [
+          "Bpjs Number"
+        ]
+      },
+      {
+        "transaction_date": [
+          "Transaction Date"
+        ]
+      },
+      {
+        "claim_amount": [
+          "Claim Amount"
+        ]
+      },
+      {
+        "claim_status": [
+          "Claim Status"
+        ]
+      },
+      {
+        "notes": [
+          "Notes"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "invoice": [
+          "Invoice"
+        ]
+      },
+      {
+        "patient": [
+          "Patient"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;

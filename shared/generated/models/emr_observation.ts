@@ -31,16 +31,17 @@ export const emr_observation = {
     "mental_status": {
       "type": "text"
     },
-    "created_date": {
-      "type": "datetime"
-    },
     "created_by": {
       "type": "uuid"
     },
     "deleted_at": {
       "type": "datetime"
     },
-    "updated_date": {
+    "created_at": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "updated_at": {
       "type": "datetime",
       "default": "now()"
     },
@@ -59,5 +60,64 @@ export const emr_observation = {
       "from": "id_emr",
       "to": "emr.id"
     }
+  },
+  "label": {
+    "title": "Emr observation",
+    "record_title": [
+      "heart_rate",
+      "breaths"
+    ],
+    "fields": [
+      {
+        "heart_rate": [
+          "Heart Rate"
+        ]
+      },
+      {
+        "breaths": [
+          "Breaths"
+        ]
+      },
+      {
+        "blood_pressure": [
+          "Blood Pressure"
+        ]
+      },
+      {
+        "body_temperature": [
+          "Body Temperature"
+        ]
+      },
+      {
+        "responsiveness": [
+          "Responsiveness"
+        ]
+      },
+      {
+        "body_height": [
+          "Body Height"
+        ]
+      },
+      {
+        "body_weight": [
+          "Body Weight"
+        ]
+      },
+      {
+        "mental_status": [
+          "Mental Status"
+        ]
+      },
+      {
+        "client": [
+          "Client"
+        ]
+      },
+      {
+        "emr": [
+          "Emr"
+        ]
+      }
+    ]
   }
 } as const satisfies ModelBase;
