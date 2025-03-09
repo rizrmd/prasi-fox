@@ -1,0 +1,18 @@
+title: Invoice
+record_title: [invoice_number, patient_name]
+fields:
+  - invoice_number:     [Invoice Number]
+  - patient_name:       [Patient Name]
+  - invoice_date:       [Invoice Date]
+  - total_amount:       [Total Amount]
+  - status:             [Status]
+  - bpjs_log:           [Bpjs Log]
+  - client:             [Client]
+  - encounter:          [Encounter]
+  - patient:            [Patient]
+  - prescription:       [Prescription]
+  - prescription_queue: [Prescription Queue]
+  - staff:              [Staff]
+  - invoice_claim:      [Invoice Claim]
+  - invoice_line:       [Invoice Line]
+  - invoice_payment:    [Invoice Payment]

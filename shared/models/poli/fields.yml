@@ -1,0 +1,11 @@
+title: Poli
+record_title: [name, status]
+fields:
+  - name:            [Name]
+  - status:          [Status]
+  - poli_code:       [Poli Code]
+  - client:          [Client]
+  - schedule_doctor: [Schedule Doctor]
+  - schedule_poli:   [Schedule Poli]
+  - encounter:       [Encounter]
+  - patient_queue:   [Patient Queue]

@@ -1,7 +1,0 @@
-title: Session
-record_title: [status, device_uuid]
-labels:
-  status: [1, Status]
-  expired_at: [2, Expired At]
-  device_uuid: [3, Device Uuid, required]
-  user: [4, User]

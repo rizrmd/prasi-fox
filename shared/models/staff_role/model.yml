@@ -31,10 +31,6 @@ relations:
     type: belongs_to
     from: id_client
     to: client.id
-  user:
-    type: has_many
-    from: id
-    to: user.id_staff_role
   staff_log:
     type: has_many
     from: id

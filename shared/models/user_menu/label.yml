@@ -1,8 +1,0 @@
-title: User menu
-record_title: []
-labels:
-  created_date: [1, Created Date]
-  updated_date: [2, Updated Date]
-  client: [3, Client]
-  menu: [4, Menu]
-  user: [5, User]

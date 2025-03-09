@@ -1,0 +1,11 @@
+title: Medical service
+record_title: [name, code]
+fields:
+  - name:         [Name]
+  - code:         [Code]
+  - description:  [Description]
+  - price:        [Price]
+  - id_treatment: [Id Treatment]
+  - id_medicine:  [Id Medicine]
+  - client:       [Client]
+  - encounter:    [Encounter]

@@ -1,0 +1,7 @@
+title: User menu
+record_title: []
+fields:
+  - created_date: [Created Date]
+  - client:       [Client]
+  - menu:         [Menu]
+  - user:         [User]

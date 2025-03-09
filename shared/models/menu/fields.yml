@@ -1,0 +1,12 @@
+title: Menu
+record_title: [id_parent, name]
+fields:
+  - id_parent:   [Id Parent]
+  - name:        [Name]
+  - url_menu:    [Url Menu]
+  - is_active:   [Is Active]
+  - sequence:    [Sequence]
+  - description: [Description]
+  - client:      [Client]
+  - role_menu:   [Role Menu]
+  - user_menu:   [User Menu]

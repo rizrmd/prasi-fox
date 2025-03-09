@@ -7,14 +7,9 @@ mapping:
       fullname: display_name
       username: username
       password: password
-      role_id: id_staff_role
+      role: role
     default:
-      role_id: 1f3de71e-46ba-46d6-b5a4-5fd2a1afb2b2
-  role:
-    table: m_staff_role
-    fields:
-      id: id
-      name: name
+      role: user
   session:
     table: t_session
     fields:

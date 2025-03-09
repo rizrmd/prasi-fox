@@ -1,0 +1,14 @@
+title: Invoice claim
+record_title: [invoice_number, patient_name]
+fields:
+  - invoice_number:  [Invoice Number]
+  - patient_name:    [Patient Name]
+  - claim_date:      [Claim Date]
+  - payer_type:      [Payer Type]
+  - payer_number:    [Payer Number]
+  - claim_amount:    [Claim Amount]
+  - approved_amount: [Approved Amount]
+  - claim_status:    [Claim Status]
+  - client:          [Client]
+  - invoice:         [Invoice]
+  - patient:         [Patient]

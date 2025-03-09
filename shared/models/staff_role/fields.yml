@@ -1,0 +1,9 @@
+title: Staff role
+record_title: [name]
+fields:
+  - name:            [Name]
+  - role_menu:       [Role Menu]
+  - schedule_doctor: [Schedule Doctor]
+  - staff:           [Staff]
+  - client:          [Client]
+  - staff_log:       [Staff Log]

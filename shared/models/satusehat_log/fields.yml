@@ -1,0 +1,11 @@
+title: Satusehat log
+record_title: [endpoint, status]
+fields:
+  - endpoint:      [Endpoint]
+  - request_body:  [Request Body]
+  - response_body: [Response Body]
+  - status_code:   [Status Code]
+  - status:        [Status]
+  - error_message: [Error Message]
+  - resource_data: [Resource Data]
+  - client:        [Client]

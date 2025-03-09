@@ -1,0 +1,13 @@
+title: Emr diagnosis treatment
+record_title: [diagnosis, treatment]
+fields:
+  - diagnosis:      [Diagnosis]
+  - treatment:      [Treatment]
+  - medicine:       [Medicine]
+  - medicine_rules: [Medicine Rules]
+  - notes:          [Notes]
+  - client:         [Client]
+  - diagnosis:      [Diagnosis]
+  - emr:            [Emr]
+  - medicine:       [Medicine]
+  - treatment:      [Treatment]

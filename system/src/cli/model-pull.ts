@@ -46,10 +46,10 @@ type TableModel = {
   relations: Record<string, ModelRelation>;
 };
 
-type LabelData = {
+type FieldsData = {
   title: string;
   record_title: string[];
-  labels: Record<string, (string | number)[]>;
+  fields: Record<string, string[]>[];
 };
 
 // Configuration for the pull operation
@@ -383,7 +383,7 @@ async function writeModelFiles(
     // console.log(`Processing table: ${tableName}`);
     const modelDir = join(modelsDir, tableName);
     const modelPath = join(modelDir, "model.yml");
-    const labelPath = join(modelDir, "label.yml");
+    const fieldPath = join(modelDir, "fields.yml");
 
     try {
       // Create directory if it doesn't exist
@@ -398,8 +398,8 @@ async function writeModelFiles(
       );
 
       // Generate and write label file
-      const labelData = generateLabelData(tableName, model);
-      await writeLabelFile(labelPath, labelData);
+      const labelData = generateFieldData(tableName, model);
+      await writeFieldFile(fieldPath, labelData);
       console.log(`✅ Generated: ${tableName}`);
     } catch (error) {
       console.error(`Failed to write model files for ${tableName}:`, error);
@@ -409,49 +409,32 @@ async function writeModelFiles(
 }
 
 // Generate label data for a table
-function generateLabelData(tableName: string, model: TableModel): LabelData {
+function generateFieldData(tableName: string, model: TableModel): FieldsData {
   // Generate label data
-  const labelData: LabelData = {
+  const fieldsData: FieldsData = {
     title:
       tableName.charAt(0).toUpperCase() + tableName.slice(1).replace(/_/g, " "),
     record_title: findRecordTitleFields(model),
-    labels: {},
+    fields: [],
   };
-
-  // Track the index for labels
-  let labelIndex = 1;
 
   // Create labels for columns
   Object.entries(model.columns)
     .filter(([colName]) => !CONFIG.EXCLUDED_FIELDS.includes(colName))
     .forEach(([colName, colDef]) => {
       const displayName = formatDisplayName(colName);
-
-      // Check if field is required
-      let isRequired = false;
-      if (typeof colDef === "object" && colDef !== null) {
-        isRequired =
-          "default" in colDef === false && !colName.startsWith("id_");
-      }
-
-      // Add to labelData.labels
-      labelData.labels[colName] = isRequired
-        ? [labelIndex, displayName, "required"]
-        : [labelIndex, displayName];
-
-      labelIndex++;
+      fieldsData.fields.push({ [colName]: [displayName] });
     });
 
   // Add relations to labels
   if (model.relations) {
     Object.entries(model.relations).forEach(([relationName, relationDef]) => {
       const displayName = formatDisplayName(relationName);
-      labelData.labels[relationName] = [labelIndex, displayName];
-      labelIndex++;
+      fieldsData.fields.push({ [relationName]: [displayName] });
     });
   }
 
-  return labelData;
+  return fieldsData;
 }
 
 // Find appropriate fields for record_title
@@ -487,68 +470,53 @@ function formatDisplayName(fieldName: string): string {
 }
 
 // Write label file with proper YAML formatting
-async function writeLabelFile(
+async function writeFieldFile(
   labelPath: string,
-  labelData: LabelData
+  labelData: FieldsData
 ): Promise<void> {
-  // Convert to YAML
-  let yamlString = stringify(labelData, { indent: 2 });
+  // Convert to YAML first
+  let yamlString = stringify({
+    title: labelData.title,
+    record_title: [],
+    fields: []
+  }, { indent: 2 });
 
-  // Process the YAML string to convert block arrays to flow style (square brackets)
-  const lines = yamlString.split("\n");
-  let inArray = false;
-  let arrayIndent = 0;
-  let arrayKey = "";
-  let arrayItems: string[] = [];
-
-  const outputLines: string[] = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (!line) continue; // Skip empty lines
-
-    // Check if this line starts a new array
-    const arrayStart = line.match(/^(\s*)(\w+):\s*$/);
-    if (
-      arrayStart &&
-      i + 1 < lines.length &&
-      lines[i + 1]?.trimStart().startsWith("- ")
-    ) {
-      // This is the start of an array
-      arrayKey = arrayStart[2] || "";
-      arrayIndent = (arrayStart[1] || "").length;
-      inArray = true;
-      arrayItems = [];
-      continue;
-    }
-
-    // If we're in an array and this line is an array item
-    if (inArray && line.trimStart().startsWith("- ")) {
-      // Extract the item value
-      const itemValue = line.trimStart().substring(2);
-      arrayItems.push(itemValue);
-
-      // Check if next line is not an array item or end of file
-      if (
-        i + 1 >= lines.length ||
-        !lines[i + 1]?.trimStart().startsWith("- ")
-      ) {
-        // End of array, output with square brackets
-        const indent = " ".repeat(arrayIndent);
-        outputLines.push(`${indent}${arrayKey}: [${arrayItems.join(", ")}]`);
-        inArray = false;
-      }
-
-      continue;
-    }
-
-    // Regular line, just output it
-    if (!inArray) {
-      outputLines.push(line);
-    }
+  // Insert record_title and fields at the right position
+  const lines = yamlString.split('\n');
+  
+  // Handle record_title
+  const recordTitleIndex = lines.findIndex(line => line === 'record_title: []');
+  if (recordTitleIndex !== -1) {
+    lines[recordTitleIndex] = `record_title: [${labelData.record_title.join(', ')}]`;
   }
 
-  await writeFile(labelPath, outputLines.join("\n"));
+  // Handle fields
+  // First find the longest key for padding
+  const maxKeyLength = labelData.fields.reduce((max, field) => {
+    const key = Object.keys(field)[0];
+    return key ? Math.max(max, key.length) : max;
+  }, 0);
+
+  const fieldLines = labelData.fields.map(field => {
+    const key = Object.keys(field)[0];
+    if (key && typeof field[key] !== 'undefined') {
+      const values = field[key];
+      if (Array.isArray(values)) {
+        const padding = ' '.repeat(maxKeyLength - key.length);
+        return `  - ${key}:${padding} [${values.join(', ')}]`;
+      }
+    }
+    return '';
+  }).filter(Boolean);
+
+  const fieldsIndex = lines.findIndex(line => line === 'fields: []');
+  if (fieldsIndex !== -1) {
+    lines[fieldsIndex] = 'fields:';
+    lines.splice(fieldsIndex + 1, 0, ...fieldLines);
+  }
+
+  yamlString = lines.join('\n');
+  await writeFile(labelPath, yamlString);
 }
 
 // Main function to pull models from database

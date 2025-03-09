@@ -1,0 +1,12 @@
+title: User
+record_title: [display_name, email]
+fields:
+  - display_name: [Display Name]
+  - email:        [Email]
+  - password:     [Password]
+  - username:     [Username]
+  - role:         [Role]
+  - client:       [Client]
+  - staff:        [Staff]
+  - user_menu:    [User Menu]
+  - session:      [Session]

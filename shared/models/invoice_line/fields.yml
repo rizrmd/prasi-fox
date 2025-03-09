@@ -1,0 +1,13 @@
+title: Invoice line
+record_title: [description, quantity]
+fields:
+  - description:    [Description]
+  - quantity:       [Quantity]
+  - unit_price:     [Unit Price]
+  - total_price:    [Total Price]
+  - treatment_name: [Treatment Name]
+  - id_treatment:   [Id Treatment]
+  - medicine_name:  [Medicine Name]
+  - id_medicine:    [Id Medicine]
+  - client:         [Client]
+  - invoice:        [Invoice]

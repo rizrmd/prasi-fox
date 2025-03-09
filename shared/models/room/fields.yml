@@ -1,0 +1,12 @@
+title: Room
+record_title: [name, status]
+fields:
+  - name:          [Name]
+  - status:        [Status]
+  - service_class: [Service Class]
+  - longitude:     [Longitude]
+  - latitude:      [Latitude]
+  - description:   [Description]
+  - client:        [Client]
+  - encounter:     [Encounter]
+  - patient_room:  [Patient Room]

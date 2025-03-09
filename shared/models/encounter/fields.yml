@@ -1,0 +1,18 @@
+title: Encounter
+record_title: [patient_name, doctor_name]
+fields:
+  - patient_name:        [Patient Name]
+  - doctor_name:         [Doctor Name]
+  - encounter_type:      [Encounter Type]
+  - encounter_date:      [Encounter Date]
+  - status:              [Status]
+  - client:              [Client]
+  - emr_patient:         [Emr Patient]
+  - medical_service:     [Medical Service]
+  - patient:             [Patient]
+  - patient_queue:       [Patient Queue]
+  - poli:                [Poli]
+  - room:                [Room]
+  - staff:               [Staff]
+  - invoice:             [Invoice]
+  - prescriptions_queue: [Prescriptions Queue]

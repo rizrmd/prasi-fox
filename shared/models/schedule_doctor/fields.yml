@@ -1,0 +1,11 @@
+title: Schedule doctor
+record_title: [doctor_name, day]
+fields:
+  - doctor_name: [Doctor Name]
+  - day:         [Day]
+  - start_time:  [Start Time]
+  - end_time:    [End Time]
+  - client:      [Client]
+  - poli:        [Poli]
+  - staff:       [Staff]
+  - staff_role:  [Staff Role]

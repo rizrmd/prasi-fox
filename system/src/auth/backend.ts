@@ -16,17 +16,10 @@ export interface AuthYamlConfig {
         fullname: string;
         username: string;
         password: string;
-        role_id: string;
+        role: string;
       };
       default: {
-        role_id: string;
-      };
-    };
-    role: {
-      table: string;
-      fields: {
-        id: string;
-        name: string;
+        role: string;
       };
     };
     session: {
@@ -50,11 +43,10 @@ export const authBackend = {
   status: "init" as "init" | "loaded",
   config: null as unknown as AuthYamlConfig,
 
-  modelName: { user: "", session: "", role: " " },
+  modelName: { user: "", session: "" },
   model: {
     user: null as unknown as ModelInstance<ModelBase>,
     session: null as unknown as ModelInstance<ModelBase>,
-    role: null as unknown as ModelInstance<ModelBase>,
   },
 
   async init() {

@@ -43,7 +43,7 @@ export default defineAPI({
 
       const pk = authBackend.model.user.primaryKey;
       const user = await authBackend.model.user.findFirst({
-        fields: [pk, ...fields, [authBackend.modelName.role, "name"]],
+        fields: [pk, ...fields],
         where: [
           {
             field: mapping.username,
@@ -73,9 +73,6 @@ export default defineAPI({
             data: {
               [mapping.user_id]: user.id,
               [mapping.status]: "active",
-            },
-            debug: (opt) => {
-              console.log(opt.sql);
             },
           });
 

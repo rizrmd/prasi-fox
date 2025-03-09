@@ -1,0 +1,17 @@
+title: Medicine
+record_title: [code, name]
+fields:
+  - code:                    [Code]
+  - name:                    [Name]
+  - package:                 [Package]
+  - stock:                   [Stock]
+  - expired_date:            [Expired Date]
+  - manufacturer:            [Manufacturer]
+  - is_fast_moving:          [Is Fast Moving]
+  - dosage:                  [Dosage]
+  - price:                   [Price]
+  - ingredients:             [Ingredients]
+  - category:                [Category]
+  - emr_diagnosis_treatment: [Emr Diagnosis Treatment]
+  - client:                  [Client]
+  - prescriptions:           [Prescriptions]

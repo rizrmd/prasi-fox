@@ -1,0 +1,11 @@
+title: Emr anamnesis
+record_title: [condition_patient, medical_history]
+fields:
+  - condition_patient:    [Condition Patient]
+  - medical_history:      [Medical History]
+  - familymember_history: [Familymember History]
+  - allergy_intolerance:  [Allergy Intolerance]
+  - medication_statement: [Medication Statement]
+  - deleted_date:         [Deleted Date]
+  - client:               [Client]
+  - emr:                  [Emr]

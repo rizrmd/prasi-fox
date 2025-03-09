@@ -13,9 +13,7 @@ columns:
     default: active
     comment: active, expired
   expired_at: datetime
-  device_uuid:
-    type: uuid
-    required: true
+  device_uuid: uuid
   created_by: uuid
   updated_at:
     type: datetime

@@ -1,0 +1,8 @@
+title: Treatment
+record_title: [code, name]
+fields:
+  - code:                    [Code]
+  - name:                    [Name]
+  - version:                 [Version]
+  - emr_diagnosis_treatment: [Emr Diagnosis Treatment]
+  - client:                  [Client]

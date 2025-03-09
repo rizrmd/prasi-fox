@@ -17,6 +17,7 @@ columns:
   updated_at:
     type: datetime
     default: now()
+  role: text
 relations:
   client:
     type: belongs_to
@@ -26,10 +27,6 @@ relations:
     type: belongs_to
     from: id_staff
     to: staff.id
-  staff_role:
-    type: belongs_to
-    from: id_staff_role
-    to: staff_role.id
   user_menu:
     type: has_many
     from: id

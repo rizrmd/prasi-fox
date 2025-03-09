@@ -1,0 +1,16 @@
+title: Prescriptions queue
+record_title: [queue_number, patient_name]
+fields:
+  - queue_number:        [Queue Number]
+  - patient_name:        [Patient Name]
+  - doctor_name:         [Doctor Name]
+  - date:                [Date]
+  - prescription_status: [Prescription Status]
+  - id_medicine:         [Id Medicine]
+  - invoice:             [Invoice]
+  - client:              [Client]
+  - doctor:              [Doctor]
+  - encounter:           [Encounter]
+  - patient:             [Patient]
+  - prescription:        [Prescription]
+  - staff:               [Staff]

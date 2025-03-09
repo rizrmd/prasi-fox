@@ -1,0 +1,10 @@
+title: Schedule poli
+record_title: [poli_name, day]
+fields:
+  - poli_name:  [Poli Name]
+  - day:        [Day]
+  - start_time: [Start Time]
+  - end_time:   [End Time]
+  - client:     [Client]
+  - poli:       [Poli]
+  - staff:      [Staff]

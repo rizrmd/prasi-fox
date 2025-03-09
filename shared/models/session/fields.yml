@@ -1,0 +1,7 @@
+title: Session
+record_title: [status, device_uuid]
+fields:
+  - status:      [Status]
+  - expired_at:  [Expired At]
+  - device_uuid: [Device Uuid]
+  - user:        [User]

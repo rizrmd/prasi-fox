@@ -1,0 +1,11 @@
+title: Staff log
+record_title: [staff_name, staff_role]
+fields:
+  - staff_name:           [Staff Name]
+  - staff_role:           [Staff Role]
+  - activity_type:        [Activity Type]
+  - activity_description: [Activity Description]
+  - date:                 [Date]
+  - client:               [Client]
+  - staff:                [Staff]
+  - staff_role:           [Staff Role]
