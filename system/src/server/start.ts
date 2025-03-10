@@ -7,6 +7,7 @@ import { buildApis } from "./parts/api/build";
 import { serveApiRoutes } from "./parts/api/serve";
 import { watchApis } from "./parts/api/watch";
 import { g } from "./parts/global";
+import { watchPageRoutes } from "./frontend/watch-page";
 
 interface ServerOptions {
   port: number;
@@ -25,6 +26,7 @@ export async function startServer(
   const routes = serveApiRoutes();
   if (isDev) {
     if (!g.server) {
+      watchPageRoutes();
       runFrontendDev();
       watchApis();
     }

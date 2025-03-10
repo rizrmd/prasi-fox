@@ -1,10 +1,11 @@
 import { readdir } from "fs/promises";
 import { camelCase, snakeCase } from "lodash";
-import { join } from "path";
 
 const BACKEND_API_DIR = "system/src/server/api";
 const FRONTEND_API_FILE = "frontend/src/lib/generated/api.ts";
 const BACKEND_GENERATED_API = "system/src/server/parts/api/index.ts";
+
+const join = (...args: string[]) => args.join("/");
 
 async function scanAPIFiles() {
   const apiFiles: string[] = [];

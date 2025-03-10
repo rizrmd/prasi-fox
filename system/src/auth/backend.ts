@@ -1,9 +1,9 @@
 import { readFile } from "fs/promises";
 import { parse } from "yaml";
-import { join } from "path";
 import { models } from "shared/generated/models";
 import { modelInstance, type ModelInstance } from "system/model/instance";
 import type { ModelBase } from "system/model/base";
+import { join } from "path";
 
 // Define types for auth.yaml structure
 export interface AuthYamlConfig {
