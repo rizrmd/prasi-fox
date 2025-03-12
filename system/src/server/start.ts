@@ -1,13 +1,15 @@
 import type { ServeOptions, WebSocketHandler } from "bun";
 import { authBackend } from "system/auth/backend";
+import { color as clr } from "system/cli/color";
 import { handleFrontendProxy } from "./frontend/proxy";
 import { buildFrontend, runFrontendDev } from "./frontend/run";
 import { serveStatic } from "./frontend/static";
+import { watchPageRoutes } from "./frontend/watch-page";
 import { buildApis } from "./parts/api/build";
 import { serveApiRoutes } from "./parts/api/serve";
 import { watchApis } from "./parts/api/watch";
+import { checkDatabaseConnection } from "./parts/db";
 import { g } from "./parts/global";
-import { watchPageRoutes } from "./frontend/watch-page";
 
 interface ServerOptions {
   port: number;
@@ -29,6 +31,16 @@ export async function startServer(
       watchPageRoutes();
       runFrontendDev();
       watchApis();
+
+      setTimeout(async () => {
+        try {
+          await checkDatabaseConnection();
+          console.log(`${clr.green}Database connected${clr.esc}`);
+        } catch (e) {
+          console.log(`${clr.red}Database connection failed${clr.esc}`);
+          console.error(e);
+        }
+      }, 100);
     }
   } else {
     await buildFrontend();
@@ -68,7 +80,9 @@ export async function startServer(
     },
   } as ServeOptions & { websocket: WebSocketHandler<{ url: string }> });
 
-  console.log(`Server started at http://localhost:${port} [host: ${hostname}]`);
+  console.log(
+    `Server started at ${clr.blue}http://localhost:${port}${clr.esc} [host: ${hostname}]`
+  );
 }
 
 // Start the server if this file is executed directly
